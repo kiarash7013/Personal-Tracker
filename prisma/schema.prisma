@@ -1,0 +1,502 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum SeasonStatus {
+  DRAFT
+  ACTIVE
+  CLOSED
+}
+
+enum SeasonRole {
+  EMPLOYEE
+  MANAGER
+}
+
+enum PlanVersionStatus {
+  DRAFT
+  PUBLISHED
+  SUPERSEDED
+}
+
+enum ProjectScope {
+  AGREED
+  ADDITIONAL
+}
+
+enum RecordStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+enum AgreementType {
+  CORE
+  BONUS
+}
+
+enum SprintStatus {
+  PLANNED
+  ACTIVE
+  CLOSED
+}
+
+enum TaskSourceType {
+  MANUAL
+  JIRA
+  API
+}
+
+enum AssignmentSource {
+  MANAGER_ASSIGNED
+  CUSTOMER_REQUEST
+  STAKEHOLDER_REQUEST
+  SELF_INITIATED
+  OTHER
+}
+
+enum ApprovalStatus {
+  DRAFT
+  IN_PROGRESS
+  FINAL_APPROVED
+}
+
+enum PracticeStatus {
+  DONE
+  NOT_DONE
+  NOT_APPLICABLE
+}
+
+enum EvidenceType {
+  FIGMA
+  DOCUMENT
+  JIRA
+  OTHER_URL
+}
+
+enum MatchStatus {
+  SUGGESTED
+  CONFIRMED
+  REJECTED
+}
+
+enum SnapshotScope {
+  SPRINT
+  SEASON
+}
+
+enum MetricStatus {
+  CALCULATED
+  NO_OPPORTUNITY
+  NOT_ENOUGH_DATA
+}
+
+enum PerformanceLevel {
+  PARTIALLY_ACHIEVED
+  MEETS_EXPECTATIONS
+  EXCEEDS_EXPECTATIONS
+}
+
+enum PerformanceReasonCode {
+  LIMITED_ALIGNMENT
+  EXECUTION_GAP
+  MIXED_ALIGNMENT_EXECUTION
+  STRONG_EXECUTION
+  STRONG_ALIGNMENT
+  BONUS_ACHIEVEMENT
+  ADDITIONAL_CONTRIBUTION
+  LIMITED_OPPORTUNITY
+}
+
+enum AuditAction {
+  CREATED
+  UPDATED
+  ARCHIVED
+  ACTIVATED
+  FINALIZED
+  REOPENED
+  CLOSED
+  SNAPSHOT_CREATED
+}
+
+model User {
+  id                  String              @id @default(uuid()) @db.Uuid
+  email               String              @unique @db.VarChar(320)
+  name                String              @db.VarChar(160)
+  locale              String              @default("fa") @db.VarChar(10)
+  active              Boolean             @default(true)
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  ownedSeasons        Season[]            @relation("SeasonOwner")
+  seasonMemberships   SeasonMember[]
+  createdPlanVersions SeasonPlanVersion[] @relation("PlanVersionCreator")
+  workPractices       WorkPractice[]      @relation("PracticeOwner")
+  createdTasks        Task[]              @relation("TaskCreator")
+  createdEvidence     Evidence[]          @relation("EvidenceCreator")
+  auditLogs           AuditLog[]          @relation("AuditActor")
+
+  @@map("users")
+}
+
+model Season {
+  id                   String                      @id @default(uuid()) @db.Uuid
+  name                 String                      @db.VarChar(160)
+  startDate            DateTime                    @map("start_date") @db.Date
+  endDate              DateTime                    @map("end_date") @db.Date
+  status               SeasonStatus                @default(DRAFT)
+  employeeId           String                      @map("employee_id") @db.Uuid
+  lockVersion          Int                         @default(0) @map("lock_version")
+  createdAt            DateTime                    @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime                    @updatedAt @map("updated_at") @db.Timestamptz(6)
+  closedAt             DateTime?                   @map("closed_at") @db.Timestamptz(6)
+  reopenedAt           DateTime?                   @map("reopened_at") @db.Timestamptz(6)
+  employee             User                        @relation("SeasonOwner", fields: [employeeId], references: [id], onDelete: Restrict)
+  members              SeasonMember[]
+  planVersions         SeasonPlanVersion[]
+  projects             Project[]
+  sprints              Sprint[]
+  tasks                Task[]
+  performanceSettings  PerformanceSettingVersion[]
+  performanceSnapshots PerformanceSnapshot[]
+  auditLogs            AuditLog[]
+
+  @@index([employeeId, status])
+  @@map("seasons")
+}
+
+model SeasonMember {
+  id        String     @id @default(uuid()) @db.Uuid
+  seasonId  String     @map("season_id") @db.Uuid
+  userId    String     @map("user_id") @db.Uuid
+  role      SeasonRole
+  createdAt DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  season    Season     @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  user      User       @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([seasonId, userId])
+  @@index([userId, role])
+  @@map("season_members")
+}
+
+model SeasonPlanVersion {
+  id                 String              @id @default(uuid()) @db.Uuid
+  seasonId           String              @map("season_id") @db.Uuid
+  version            Int
+  status             PlanVersionStatus   @default(DRAFT)
+  effectiveAt        DateTime?           @map("effective_at") @db.Timestamptz(6)
+  publishedAt        DateTime?           @map("published_at") @db.Timestamptz(6)
+  createdById        String              @map("created_by_id") @db.Uuid
+  createdAt          DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  season             Season              @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  createdBy          User                @relation("PlanVersionCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  projectPlans       ProjectPlan[]
+  agreementRevisions AgreementRevision[]
+  tasks              Task[]
+
+  @@unique([seasonId, version])
+  @@index([seasonId, status, effectiveAt])
+  @@map("season_plan_versions")
+}
+
+model Project {
+  id          String        @id @default(uuid()) @db.Uuid
+  seasonId    String        @map("season_id") @db.Uuid
+  name        String        @db.VarChar(160)
+  description String?
+  scope       ProjectScope
+  status      RecordStatus  @default(ACTIVE)
+  createdAt   DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt   DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  archivedAt  DateTime?     @map("archived_at") @db.Timestamptz(6)
+  season      Season        @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  plans       ProjectPlan[]
+  agreements  Agreement[]
+  tasks       Task[]
+
+  @@unique([seasonId, name])
+  @@index([seasonId, scope, status])
+  @@map("projects")
+}
+
+model ProjectPlan {
+  id                  String              @id @default(uuid()) @db.Uuid
+  seasonPlanVersionId String              @map("season_plan_version_id") @db.Uuid
+  projectId           String              @map("project_id") @db.Uuid
+  nameSnapshot        String              @map("name_snapshot") @db.VarChar(160)
+  descriptionSnapshot String?             @map("description_snapshot")
+  weight              Decimal             @db.Decimal(7, 4)
+  createdAt           DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  seasonPlanVersion   SeasonPlanVersion   @relation(fields: [seasonPlanVersionId], references: [id], onDelete: Restrict)
+  project             Project             @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  agreementRevisions  AgreementRevision[]
+
+  @@unique([seasonPlanVersionId, projectId])
+  @@index([projectId])
+  @@map("project_plans")
+}
+
+model Agreement {
+  id         String              @id @default(uuid()) @db.Uuid
+  projectId  String              @map("project_id") @db.Uuid
+  status     RecordStatus        @default(ACTIVE)
+  createdAt  DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt  DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  archivedAt DateTime?           @map("archived_at") @db.Timestamptz(6)
+  project    Project             @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  revisions  AgreementRevision[]
+
+  @@index([projectId, status])
+  @@map("agreements")
+}
+
+model AgreementRevision {
+  id                  String               @id @default(uuid()) @db.Uuid
+  agreementId         String               @map("agreement_id") @db.Uuid
+  projectPlanId       String               @map("project_plan_id") @db.Uuid
+  seasonPlanVersionId String               @map("season_plan_version_id") @db.Uuid
+  revision            Int
+  title               String               @db.VarChar(240)
+  description         String?
+  agreementType       AgreementType        @map("agreement_type")
+  createdAt           DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  agreement           Agreement            @relation(fields: [agreementId], references: [id], onDelete: Restrict)
+  projectPlan         ProjectPlan          @relation(fields: [projectPlanId], references: [id], onDelete: Restrict)
+  seasonPlanVersion   SeasonPlanVersion    @relation(fields: [seasonPlanVersionId], references: [id], onDelete: Restrict)
+  expectedPractices   AgreementPractice[]
+  taskMatches         TaskAgreementMatch[]
+
+  @@unique([agreementId, revision])
+  @@index([projectPlanId, agreementType])
+  @@index([seasonPlanVersionId])
+  @@map("agreement_revisions")
+}
+
+model WorkPractice {
+  id            String              @id @default(uuid()) @db.Uuid
+  ownerId       String              @map("owner_id") @db.Uuid
+  name          String              @db.VarChar(160)
+  description   String?
+  active        Boolean             @default(true)
+  createdAt     DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  archivedAt    DateTime?           @map("archived_at") @db.Timestamptz(6)
+  owner         User                @relation("PracticeOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  agreements    AgreementPractice[]
+  taskPractices TaskPractice[]
+
+  @@unique([ownerId, name])
+  @@index([ownerId, active])
+  @@map("work_practices")
+}
+
+model AgreementPractice {
+  id                          String            @id @default(uuid()) @db.Uuid
+  agreementRevisionId         String            @map("agreement_revision_id") @db.Uuid
+  workPracticeId              String            @map("work_practice_id") @db.Uuid
+  practiceNameSnapshot        String            @map("practice_name_snapshot") @db.VarChar(160)
+  practiceDescriptionSnapshot String?           @map("practice_description_snapshot")
+  createdAt                   DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  agreementRevision           AgreementRevision @relation(fields: [agreementRevisionId], references: [id], onDelete: Restrict)
+  workPractice                WorkPractice      @relation(fields: [workPracticeId], references: [id], onDelete: Restrict)
+
+  @@unique([agreementRevisionId, workPracticeId])
+  @@index([workPracticeId])
+  @@map("agreement_practices")
+}
+
+model Sprint {
+  id             String                @id @default(uuid()) @db.Uuid
+  seasonId       String                @map("season_id") @db.Uuid
+  name           String                @db.VarChar(120)
+  sequenceNumber Int                   @map("sequence_number")
+  startDate      DateTime              @map("start_date") @db.Date
+  endDate        DateTime              @map("end_date") @db.Date
+  status         SprintStatus          @default(PLANNED)
+  createdAt      DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime              @updatedAt @map("updated_at") @db.Timestamptz(6)
+  season         Season                @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  tasks          Task[]
+  snapshots      PerformanceSnapshot[]
+
+  @@unique([seasonId, sequenceNumber])
+  @@index([seasonId, status])
+  @@map("sprints")
+}
+
+model Task {
+  id                  String               @id @default(uuid()) @db.Uuid
+  seasonId            String               @map("season_id") @db.Uuid
+  sprintId            String               @map("sprint_id") @db.Uuid
+  projectId           String               @map("project_id") @db.Uuid
+  seasonPlanVersionId String               @map("season_plan_version_id") @db.Uuid
+  externalCode        String?              @map("external_code") @db.VarChar(120)
+  externalId          String?              @map("external_id") @db.VarChar(240)
+  sourceUrl           String?              @map("source_url") @db.VarChar(2048)
+  title               String               @db.VarChar(300)
+  description         String?
+  assignmentSource    AssignmentSource     @map("assignment_source")
+  sourceType          TaskSourceType       @default(MANUAL) @map("source_type")
+  approvalStatus      ApprovalStatus       @default(DRAFT) @map("approval_status")
+  finalizedAt         DateTime?            @map("finalized_at") @db.Timestamptz(6)
+  createdById         String               @map("created_by_id") @db.Uuid
+  createdAt           DateTime             @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt           DateTime             @updatedAt @map("updated_at") @db.Timestamptz(6)
+  season              Season               @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  sprint              Sprint               @relation(fields: [sprintId], references: [id], onDelete: Restrict)
+  project             Project              @relation(fields: [projectId], references: [id], onDelete: Restrict)
+  seasonPlanVersion   SeasonPlanVersion    @relation(fields: [seasonPlanVersionId], references: [id], onDelete: Restrict)
+  createdBy           User                 @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Restrict)
+  practices           TaskPractice[]
+  evidence            Evidence[]
+  agreementMatches    TaskAgreementMatch[]
+
+  @@unique([seasonId, sourceType, externalCode])
+  @@index([seasonId, approvalStatus, finalizedAt])
+  @@index([projectId, approvalStatus])
+  @@index([sprintId, approvalStatus])
+  @@map("tasks")
+}
+
+model TaskPractice {
+  id                   String         @id @default(uuid()) @db.Uuid
+  taskId               String         @map("task_id") @db.Uuid
+  workPracticeId       String         @map("work_practice_id") @db.Uuid
+  status               PracticeStatus
+  practiceNameSnapshot String         @map("practice_name_snapshot") @db.VarChar(160)
+  createdAt            DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+  task                 Task           @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  workPractice         WorkPractice   @relation(fields: [workPracticeId], references: [id], onDelete: Restrict)
+
+  @@unique([taskId, workPracticeId])
+  @@index([workPracticeId, status])
+  @@map("task_practices")
+}
+
+model Evidence {
+  id          String       @id @default(uuid()) @db.Uuid
+  taskId      String       @map("task_id") @db.Uuid
+  type        EvidenceType
+  title       String       @db.VarChar(240)
+  url         String       @db.VarChar(2048)
+  createdById String       @map("created_by_id") @db.Uuid
+  createdAt   DateTime     @default(now()) @map("created_at") @db.Timestamptz(6)
+  task        Task         @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  createdBy   User         @relation("EvidenceCreator", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@index([taskId, type])
+  @@map("evidence")
+}
+
+model TaskAgreementMatch {
+  id                   String            @id @default(uuid()) @db.Uuid
+  taskId               String            @map("task_id") @db.Uuid
+  agreementRevisionId  String            @map("agreement_revision_id") @db.Uuid
+  status               MatchStatus       @default(SUGGESTED)
+  confidence           Decimal?          @db.Decimal(5, 4)
+  matchedPracticeCount Int               @map("matched_practice_count")
+  createdAt            DateTime          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime          @updatedAt @map("updated_at") @db.Timestamptz(6)
+  task                 Task              @relation(fields: [taskId], references: [id], onDelete: Restrict)
+  agreementRevision    AgreementRevision @relation(fields: [agreementRevisionId], references: [id], onDelete: Restrict)
+
+  @@unique([taskId, agreementRevisionId])
+  @@index([agreementRevisionId, status])
+  @@map("task_agreement_matches")
+}
+
+model PerformanceSettingVersion {
+  id                                  String   @id @default(uuid()) @db.Uuid
+  seasonId                            String   @map("season_id") @db.Uuid
+  version                             Int
+  meetsExpectationsMinCoreAchievement Decimal  @default(80) @map("meets_expectations_min_core_achievement") @db.Decimal(7, 4)
+  minimumAlignedExecution             Decimal  @default(80) @map("minimum_aligned_execution") @db.Decimal(7, 4)
+  bonusRequiredForExceeds             Decimal  @default(60) @map("bonus_required_for_exceeds") @db.Decimal(7, 4)
+  additionalContributionThreshold     Decimal  @default(15) @map("additional_contribution_threshold") @db.Decimal(7, 4)
+  lowAlignmentThreshold               Decimal  @default(60) @map("low_alignment_threshold") @db.Decimal(7, 4)
+  strongMetricThreshold               Decimal  @default(85) @map("strong_metric_threshold") @db.Decimal(7, 4)
+  minimumAdditionalTaskCount          Int      @default(2) @map("minimum_additional_task_count")
+  minimumObservableProjectWeight      Decimal  @default(30) @map("minimum_observable_project_weight") @db.Decimal(7, 4)
+  includeSelfInitiatedInAlignment     Boolean  @default(false) @map("include_self_initiated_in_alignment")
+  effectiveAt                         DateTime @map("effective_at") @db.Timestamptz(6)
+  createdAt                           DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  season                              Season   @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+
+  @@unique([seasonId, version])
+  @@index([seasonId, effectiveAt])
+  @@map("performance_setting_versions")
+}
+
+model PerformanceSnapshot {
+  id                      String                  @id @default(uuid()) @db.Uuid
+  seasonId                String                  @map("season_id") @db.Uuid
+  sprintId                String?                 @map("sprint_id") @db.Uuid
+  scope                   SnapshotScope
+  revision                Int                     @default(1)
+  asOf                    DateTime                @map("as_of") @db.Timestamptz(6)
+  calculationVersion      String                  @map("calculation_version") @db.VarChar(40)
+  inputHash               String                  @map("input_hash") @db.VarChar(128)
+  metricStatus            MetricStatus            @map("metric_status")
+  performanceLevel        PerformanceLevel?       @map("performance_level")
+  primaryReason           PerformanceReasonCode?  @map("primary_reason")
+  supportingReasons       PerformanceReasonCode[] @map("supporting_reasons")
+  coreAchievement         Decimal?                @map("core_achievement") @db.Decimal(7, 4)
+  coreOpportunityCoverage Decimal?                @map("core_opportunity_coverage") @db.Decimal(7, 4)
+  workAlignment           Decimal?                @map("work_alignment") @db.Decimal(7, 4)
+  alignedExecution        Decimal?                @map("aligned_execution") @db.Decimal(7, 4)
+  bonusAchievement        Decimal?                @map("bonus_achievement") @db.Decimal(7, 4)
+  additionalContribution  Decimal?                @map("additional_contribution") @db.Decimal(7, 4)
+  seasonElapsed           Decimal                 @map("season_elapsed") @db.Decimal(7, 4)
+  createdAt               DateTime                @default(now()) @map("created_at") @db.Timestamptz(6)
+  season                  Season                  @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  sprint                  Sprint?                 @relation(fields: [sprintId], references: [id], onDelete: Restrict)
+  details                 SnapshotMetricDetail[]
+
+  @@unique([seasonId, scope, sprintId, revision])
+  @@index([seasonId, asOf])
+  @@map("performance_snapshots")
+}
+
+model SnapshotMetricDetail {
+  id            String              @id @default(uuid()) @db.Uuid
+  snapshotId    String              @map("snapshot_id") @db.Uuid
+  metricKey     String              @map("metric_key") @db.VarChar(80)
+  entityType    String              @map("entity_type") @db.VarChar(80)
+  entityId      String?             @map("entity_id") @db.Uuid
+  labelSnapshot String              @map("label_snapshot") @db.VarChar(300)
+  numerator     Decimal?            @db.Decimal(18, 6)
+  denominator   Decimal?            @db.Decimal(18, 6)
+  value         Decimal?            @db.Decimal(18, 6)
+  weight        Decimal?            @db.Decimal(18, 6)
+  contribution  Decimal?            @db.Decimal(18, 6)
+  metadata      Json?
+  createdAt     DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  snapshot      PerformanceSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@index([snapshotId, metricKey])
+  @@index([entityType, entityId])
+  @@map("snapshot_metric_details")
+}
+
+model AuditLog {
+  id         String      @id @default(uuid()) @db.Uuid
+  seasonId   String?     @map("season_id") @db.Uuid
+  actorId    String      @map("actor_id") @db.Uuid
+  entityType String      @map("entity_type") @db.VarChar(80)
+  entityId   String      @map("entity_id") @db.Uuid
+  action     AuditAction
+  before     Json?
+  after      Json?
+  metadata   Json?
+  createdAt  DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+  season     Season?     @relation(fields: [seasonId], references: [id], onDelete: Restrict)
+  actor      User        @relation("AuditActor", fields: [actorId], references: [id], onDelete: Restrict)
+
+  @@index([seasonId, createdAt])
+  @@index([entityType, entityId, createdAt])
+  @@map("audit_logs")
+}
