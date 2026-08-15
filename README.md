@@ -10,7 +10,7 @@ Phase 5 تکمیل شده است: مدل داده، موتور محاسبات، 
 
 - Node.js 24+
 - pnpm 11+
-- PostgreSQL
+- یک پروژه Supabase
 
 ## راه‌اندازی
 
@@ -22,6 +22,10 @@ pnpm db:deploy
 pnpm db:seed
 pnpm dev
 ```
+
+پروژه از Supabase Postgres به‌عنوان دیتابیس اصلی استفاده می‌کند. `DATABASE_URL` برای Runtime و `DIRECT_URL` برای Prisma CLI و Migration است. Connection Stringها را از دکمه **Connect** پروژه Supabase دریافت کنید و Secretها را فقط در `.env` یا تنظیمات محیط استقرار نگه دارید.
+
+راهنمای کامل اتصال و تصمیم امنیتی Prisma/Data API در [docs/supabase.md](docs/supabase.md) ثبت شده است.
 
 برای محیط واقعی، `AUTH_SECRET` را با یک مقدار تصادفی حداقل ۳۲ کاراکتری تنظیم کنید. دو رمز Seed نیز باید در `SEED_EMPLOYEE_PASSWORD` و `SEED_MANAGER_PASSWORD` قرار بگیرند. حساب‌های توسعه:
 
