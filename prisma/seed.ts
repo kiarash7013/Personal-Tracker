@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../generated/prisma/client";
+import { hashPassword } from "../src/modules/authentication/infrastructure/password";
 
 const connectionString = process.env.DATABASE_URL;
 
@@ -21,21 +22,37 @@ const defaultPractices = [
 ] as const;
 
 async function main() {
+  const employeePassword = process.env.SEED_EMPLOYEE_PASSWORD;
+  const managerPassword = process.env.SEED_MANAGER_PASSWORD;
+
+  if (!employeePassword || !managerPassword) {
+    throw new Error(
+      "SEED_EMPLOYEE_PASSWORD and SEED_MANAGER_PASSWORD are required to seed users.",
+    );
+  }
+
+  const [employeePasswordHash, managerPasswordHash] = await Promise.all([
+    hashPassword(employeePassword),
+    hashPassword(managerPassword),
+  ]);
+
   const employee = await prisma.user.upsert({
     where: { email: "employee@example.test" },
-    update: { name: "کارمند نمونه", active: true },
+    update: { name: "کارمند نمونه", active: true, passwordHash: employeePasswordHash },
     create: {
       email: "employee@example.test",
       name: "کارمند نمونه",
+      passwordHash: employeePasswordHash,
     },
   });
 
   await prisma.user.upsert({
     where: { email: "manager@example.test" },
-    update: { name: "مدیر نمونه", active: true },
+    update: { name: "مدیر نمونه", active: true, passwordHash: managerPasswordHash },
     create: {
       email: "manager@example.test",
       name: "مدیر نمونه",
+      passwordHash: managerPasswordHash,
     },
   });
 
