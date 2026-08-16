@@ -82,6 +82,9 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
                 {fa.seasons.manageTasks}
               </Link>
             ) : null}
+            <Link className="btn btn-outline-secondary" href={`/seasons/${season.id}/settings/performance`}>
+              تنظیمات عملکرد
+            </Link>
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/edit`}>
               {fa.seasons.editAction}
             </Link>
@@ -101,6 +104,9 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
             </Link>
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/tasks`}>
               {fa.seasons.manageTasks}
+            </Link>
+            <Link className="btn btn-outline-secondary" href={`/seasons/${season.id}/settings/performance`}>
+              تنظیمات عملکرد
             </Link>
           </div>
         )}

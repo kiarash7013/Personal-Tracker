@@ -4,6 +4,7 @@ export const seasonCapabilities = [
   "season:manage-projects",
   "season:manage-sprints",
   "season:manage-tasks",
+  "season:manage-settings",
   "season:close",
   "season:reopen",
   "season:manager-review",
@@ -23,6 +24,7 @@ const employeeWriteCapabilities = new Set<SeasonCapability>([
   "season:manage-projects",
   "season:manage-sprints",
   "season:manage-tasks",
+  "season:manage-settings",
   "season:close",
 ]);
 

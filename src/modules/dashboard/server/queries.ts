@@ -1,5 +1,7 @@
 import { getPrisma } from "@/infrastructure/database/prisma";
 import type { Prisma } from "../../../../generated/prisma/client";
+import { classifyPerformance } from "@/domain/calculations";
+import { DEFAULT_PERFORMANCE_SETTINGS } from "@/modules/performance-settings/domain/performance-settings";
 import { calculateDashboardMetrics, calculateSeasonElapsed } from "../application/dashboard-metrics";
 
 async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereInput) {
@@ -12,6 +14,10 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
       startDate: true,
       endDate: true,
       employee: { select: { name: true, email: true } },
+      performanceSettings: {
+        orderBy: { version: "desc" },
+        take: 1,
+      },
       sprints: {
         orderBy: { sequenceNumber: "asc" },
         select: { id: true, name: true, sequenceNumber: true, status: true, startDate: true, endDate: true },
@@ -100,7 +106,31 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     })),
   }));
 
-  const metrics = calculateDashboardMetrics({ projects, agreements, tasks: calculationTasks });
+  const storedSettings = season.performanceSettings[0];
+  const settings = storedSettings ? {
+    version: storedSettings.version,
+    meetsExpectationsMinCoreAchievement: Number(storedSettings.meetsExpectationsMinCoreAchievement),
+    minimumAlignedExecution: Number(storedSettings.minimumAlignedExecution),
+    bonusRequiredForExceeds: Number(storedSettings.bonusRequiredForExceeds),
+    additionalContributionThreshold: Number(storedSettings.additionalContributionThreshold),
+    lowAlignmentThreshold: Number(storedSettings.lowAlignmentThreshold),
+    strongMetricThreshold: Number(storedSettings.strongMetricThreshold),
+    minimumAdditionalTaskCount: storedSettings.minimumAdditionalTaskCount,
+    minimumObservableProjectWeight: Number(storedSettings.minimumObservableProjectWeight),
+    includeSelfInitiatedInAlignment: storedSettings.includeSelfInitiatedInAlignment,
+  } : { version: 0, ...DEFAULT_PERFORMANCE_SETTINGS };
+  const metrics = calculateDashboardMetrics(
+    { projects, agreements, tasks: calculationTasks },
+    { includeSelfInitiatedInAlignment: settings.includeSelfInitiatedInAlignment },
+  );
+  const classification = classifyPerformance({
+    coreAchievement: metrics.coreAchievement.value,
+    alignedExecution: metrics.alignedExecution.value,
+    bonusAchievement: metrics.bonusAchievement.value,
+    additionalContribution: metrics.additionalContribution.value,
+    additionalTaskCount: metrics.additionalContribution.numerator,
+    thresholds: settings,
+  });
   const now = new Date();
   const currentSprint = season.sprints.find((sprint) => sprint.status === "ACTIVE")
     ?? season.sprints.find((sprint) => sprint.startDate <= now && sprint.endDate >= now)
@@ -122,6 +152,8 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     },
     currentSprint,
     metrics,
+    classification,
+    settings,
     counts: {
       finalized: season.tasks.length - draftTasks.length,
       draft: draftTasks.length,

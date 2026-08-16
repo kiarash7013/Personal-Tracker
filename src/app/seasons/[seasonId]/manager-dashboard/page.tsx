@@ -8,6 +8,8 @@ import { MetricCard } from "@/modules/dashboard/components/metric-card";
 import { getManagerDashboard } from "@/modules/dashboard/server/queries";
 import { formatPercent, formatPersianDate, formatPersianNumber } from "@/presentation/formatters";
 
+const performanceLabels = { PARTIALLY_ACHIEVED: "بخشی از توافق انجام شده", MEETS_EXPECTATIONS: "در سطح انتظار", EXCEEDS_EXPECTATIONS: "فراتر از سطح انتظار" } as const;
+
 export default async function ManagerDashboardPage({ params }: { params: Promise<{ seasonId: string }> }) {
   const user = await requireCurrentUser();
   const { seasonId } = await params;
@@ -25,7 +27,7 @@ export default async function ManagerDashboardPage({ params }: { params: Promise
     </div>
 
     <div className="row g-3 mb-4">
-      <div className="col-md-6 col-xl-3"><article className="card app-card border-0 h-100 performance-level-pending"><div className="card-body p-4"><span className="metric-label">سطح عملکرد</span><strong className="metric-value metric-value-text">در انتظار طبقه‌بندی</strong><p className="text-secondary small mb-0">در مرحله بعد از KPIها و Thresholdهای قابل تنظیم تعیین می‌شود.</p></div></article></div>
+      <div className="col-md-6 col-xl-3"><article className="card app-card border-0 h-100 performance-level-pending"><div className="card-body p-4"><span className="metric-label">سطح عملکرد</span><strong className="metric-value metric-value-text">{dashboard.classification.level ? performanceLabels[dashboard.classification.level] : "داده کافی نیست"}</strong><p className="text-secondary small mb-0">براساس نسخه {formatPersianNumber(dashboard.settings.version || 1)} Thresholdها</p></div></article></div>
       <div className="col-md-6 col-xl-3"><MetricCard helper="تحقق انتظارات اصلی در فرصت‌های مرتبط" status={metrics.coreAchievement.status} title="تحقق توافق‌های اصلی" value={metrics.coreAchievement.value} /></div>
       <div className="col-md-6 col-xl-3"><MetricCard denominator={metrics.workAlignment.denominator} helper="سهم کار تخصیص‌یافته داخل توافق اولیه" numerator={metrics.workAlignment.numerator} status={metrics.workAlignment.status} title="هم‌راستایی کارها" tone="success" value={metrics.workAlignment.value} /></div>
       <div className="col-md-6 col-xl-3"><MetricCard denominator={metrics.alignedExecution.denominator} helper="کیفیت اجرا در فرصت‌های هم‌راستا" numerator={metrics.alignedExecution.numerator} status={metrics.alignedExecution.status} title="اجرای هم‌راستا" tone="success" value={metrics.alignedExecution.value} /></div>
@@ -42,7 +44,7 @@ export default async function ManagerDashboardPage({ params }: { params: Promise
 
     <div className="row g-4">
       <div className="col-lg-7"><section className="card app-card border-0 h-100"><div className="card-body p-4"><div className="d-flex justify-content-between align-items-center mb-4"><h2 className="h5 mb-0">تسک‌های اخیر</h2><Link className="small" href={`/seasons/${seasonId}/tasks`}>همه تسک‌ها</Link></div><div className="vstack gap-2">{dashboard.recentTasks.map((task) => <Link className="recent-task-row" href={`/seasons/${seasonId}/tasks/${task.id}`} key={task.id}><span className={`task-state-dot state-${task.approvalStatus.toLowerCase()}`} /><span className="flex-grow-1"><strong>{task.title}</strong><small>{task.project.name} · {task.sprint.name}</small></span><span className="task-code" dir="ltr">{task.externalCode || "—"}</span></Link>)}</div></div></section></div>
-      <div className="col-lg-5"><section className="card app-card border-0 h-100"><div className="card-body p-4"><h2 className="h5 mb-3">Context فعلی داده‌ها</h2><p className="neutral-observation">{metrics.workAlignment.value === null ? "هنوز کار نهایی تخصیص‌یافته‌ای برای محاسبه هم‌راستایی وجود ندارد." : `${formatPercent(metrics.workAlignment.value)} از کارهای نهایی تخصیص‌یافته با پروژه‌های توافق‌شده هم‌راستا بوده‌اند.`}</p><p className="neutral-observation">{metrics.alignedExecution.value === null ? "هنوز نمونه مولفه قابل‌اعمالی در کار هم‌راستا ثبت نشده است." : `${formatPercent(metrics.alignedExecution.value)} از مولفه‌های قابل‌اعمال در کارهای هم‌راستا انجام شده‌اند.`}</p><div className="alert alert-light border small mb-0">تفسیر «چرا این سطح عملکرد» پس از Classification و Reasoning Engine افزوده می‌شود؛ این بخش فعلاً فقط داده را بدون قضاوت بیان می‌کند.</div></div></section></div>
+      <div className="col-lg-5"><section className="card app-card border-0 h-100"><div className="card-body p-4"><div className="d-flex justify-content-between gap-2 mb-3"><h2 className="h5 mb-0">Context فعلی داده‌ها</h2><Link className="small" href={`/seasons/${seasonId}/settings/performance`}>Thresholdها</Link></div><p className="neutral-observation">{metrics.workAlignment.value === null ? "هنوز کار نهایی تخصیص‌یافته‌ای برای محاسبه هم‌راستایی وجود ندارد." : `${formatPercent(metrics.workAlignment.value)} از کارهای نهایی تخصیص‌یافته با پروژه‌های توافق‌شده هم‌راستا بوده‌اند.`}</p><p className="neutral-observation">{metrics.alignedExecution.value === null ? "هنوز نمونه مولفه قابل‌اعمالی در کار هم‌راستا ثبت نشده است." : `${formatPercent(metrics.alignedExecution.value)} از مولفه‌های قابل‌اعمال در کارهای هم‌راستا انجام شده‌اند.`}</p><div className="alert alert-light border small mb-0">Reasoning Engine در مرحله بعد علت اصلی و دلایل پشتیبان این سطح را به‌صورت خنثی اضافه می‌کند.</div></div></section></div>
     </div>
   </AppShell>;
 }

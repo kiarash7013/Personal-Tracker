@@ -24,6 +24,7 @@ describe("season authorization policy", () => {
       expect(can({ role: "EMPLOYEE", status }, "season:manage-projects")).toBe(true);
       expect(can({ role: "EMPLOYEE", status }, "season:manage-sprints")).toBe(true);
       expect(can({ role: "EMPLOYEE", status }, "season:manage-tasks")).toBe(true);
+      expect(can({ role: "EMPLOYEE", status }, "season:manage-settings")).toBe(true);
       expect(can({ role: "EMPLOYEE", status }, "season:close")).toBe(true);
       expect(can({ role: "EMPLOYEE", status }, "season:reopen")).toBe(false);
     },

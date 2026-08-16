@@ -11,6 +11,10 @@ export type AssignmentSource =
   | "STAKEHOLDER_REQUEST"
   | "SELF_INITIATED"
   | "OTHER";
+export type PerformanceLevel =
+  | "PARTIALLY_ACHIEVED"
+  | "MEETS_EXPECTATIONS"
+  | "EXCEEDS_EXPECTATIONS";
 
 export type ExclusionReason =
   | "NOT_FINAL_APPROVED"

@@ -9,6 +9,7 @@ import { getEmployeeDashboard } from "@/modules/dashboard/server/queries";
 import { formatPercent, formatPersianDate, formatPersianNumber } from "@/presentation/formatters";
 
 const statusLabels = { DRAFT: "پیش‌نویس", IN_PROGRESS: "در حال انجام", FINAL_APPROVED: "نهایی" } as const;
+const performanceLabels = { PARTIALLY_ACHIEVED: "بخشی از توافق انجام شده", MEETS_EXPECTATIONS: "در سطح انتظار", EXCEEDS_EXPECTATIONS: "فراتر از سطح انتظار" } as const;
 
 export default async function EmployeeDashboardPage({ params }: { params: Promise<{ seasonId: string }> }) {
   const user = await requireCurrentUser();
@@ -28,6 +29,7 @@ export default async function EmployeeDashboardPage({ params }: { params: Promis
         <p className="mb-0 opacity-75">{formatPersianDate(dashboard.season.startDate)} تا {formatPersianDate(dashboard.season.endDate)}</p>
       </div>
       <div className="dashboard-hero-actions">
+        <span className="current-sprint-chip">سطح فعلی: {dashboard.classification.level ? performanceLabels[dashboard.classification.level] : "داده کافی نیست"}</span>
         {dashboard.currentSprint ? <span className="current-sprint-chip">اسپرینت فعلی: {dashboard.currentSprint.name}</span> : <span className="current-sprint-chip">اسپرینت فعالی وجود ندارد</span>}
         <Link className="btn btn-light" href={`/seasons/${seasonId}/tasks/new`}>ثبت تسک جدید</Link>
       </div>
@@ -62,6 +64,6 @@ export default async function EmployeeDashboardPage({ params }: { params: Promis
       <div className="col-md-4"><div className="calculation-box"><span>Core Opportunity Coverage</span><strong>{formatPercent(metrics.coreAchievement.opportunityCoverage)}</strong><small>{formatPersianNumber(metrics.coreAchievement.projects.length)} پروژه توافق‌شده</small></div></div>
       <div className="col-md-4"><div className="calculation-box"><span>Alignment</span><strong>{formatPersianNumber(metrics.workAlignment.numerator)} ÷ {formatPersianNumber(metrics.workAlignment.denominator || 0)}</strong><small>تسک نهایی تخصیص‌یافته</small></div></div>
       <div className="col-md-4"><div className="calculation-box"><span>Aligned Execution</span><strong>{formatPersianNumber(metrics.alignedExecution.numerator)} ÷ {formatPersianNumber(metrics.alignedExecution.denominator || 0)}</strong><small>نمونه مولفه قابل‌اعمال</small></div></div>
-    </div></div></details>
+    </div><div className="d-flex justify-content-end mt-3"><Link className="btn btn-sm btn-outline-secondary" href={`/seasons/${seasonId}/settings/performance`}>تنظیم Thresholdها</Link></div></div></details>
   </AppShell>;
 }

@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 11 تکمیل شده است: Manager داشبورد فقط‌خواندنی با KPIهای اصلی، وضعیت پروژه‌ها، Opportunity Coverage، تسک‌های اخیر و Context خنثی داده‌ها دارد و می‌تواند تا Agreement، Task و Evidence Drill-down کند. هیچ Action نوشتنی برای Manager وجود ندارد. Classification سطح عملکرد در Phase 12 انجام می‌شود.
+Phase 12 تکمیل شده است: سطح عملکرد با Thresholdهای قابل تنظیم و versioned به سه سطح «بخشی از توافق»، «در سطح انتظار» و «فراتر از سطح انتظار» طبقه‌بندی می‌شود. Core صددرصد به‌تنهایی Exceeds نیست و Bonus/Additional فقط پس از برآورده شدن Core اثر مثبت دارند. Reasoning Engine در Phase 13 انجام می‌شود.
 
 ## پیش‌نیازها
 

@@ -1,6 +1,7 @@
 export * from "./additional-contribution";
 export * from "./agreement-achievement";
 export * from "./aligned-execution";
+export * from "./classification";
 export * from "./contribution";
 export * from "./errors";
 export * from "./portfolio-achievement";

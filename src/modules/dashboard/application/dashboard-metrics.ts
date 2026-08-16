@@ -4,6 +4,7 @@ import {
   calculateBonusAchievement,
   calculateCoreAchievement,
   calculateWorkAlignment,
+  DEFAULT_ASSIGNED_SOURCES,
   type AgreementInput,
   type ProjectInput,
   type TaskInput,
@@ -15,10 +16,18 @@ export type DashboardCalculationInput = {
   tasks: TaskInput[];
 };
 
-export function calculateDashboardMetrics(input: DashboardCalculationInput) {
+export function calculateDashboardMetrics(
+  input: DashboardCalculationInput,
+  options: { includeSelfInitiatedInAlignment?: boolean } = {},
+) {
   return {
     coreAchievement: calculateCoreAchievement(input),
-    workAlignment: calculateWorkAlignment(input),
+    workAlignment: calculateWorkAlignment({
+      ...input,
+      assignedSources: options.includeSelfInitiatedInAlignment
+        ? [...DEFAULT_ASSIGNED_SOURCES, "SELF_INITIATED"]
+        : DEFAULT_ASSIGNED_SOURCES,
+    }),
     alignedExecution: calculateAlignedExecution(input),
     bonusAchievement: calculateBonusAchievement(input),
     additionalContribution: calculateAdditionalContribution(input),
