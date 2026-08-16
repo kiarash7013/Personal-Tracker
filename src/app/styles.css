@@ -397,6 +397,145 @@ body {
   box-shadow: inset 0 0 0 1px rgba(26, 135, 94, 0.22), 0 8px 28px rgba(21, 59, 58, 0.065);
 }
 
+.weight-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.2rem 1.35rem;
+  border: 1px solid;
+  border-radius: 1rem;
+}
+
+.weight-summary > div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.weight-summary span,
+.weight-summary p {
+  font-size: 0.85rem;
+}
+
+.weight-summary strong {
+  font-size: 1.4rem;
+}
+
+.weight-valid {
+  border-color: #acdcca;
+  color: #155f49;
+  background: #e9f8f2;
+}
+
+.weight-pending {
+  border-color: #ead28a;
+  color: #6d560c;
+  background: #fff9e7;
+}
+
+.project-weight-badge {
+  display: inline-flex;
+  min-width: 4rem;
+  justify-content: center;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.8rem;
+  color: var(--brand-800);
+  background: var(--brand-100);
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
+.project-description {
+  min-height: 3rem;
+  line-height: 1.8;
+}
+
+.agreement-contribution {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.agreement-contribution span {
+  color: #71827f;
+  font-size: 0.72rem;
+}
+
+.agreement-contribution strong {
+  color: var(--brand-800);
+}
+
+.bonus-badge {
+  color: #68470c;
+  background: #f7df9d;
+}
+
+.practice-chip {
+  display: inline-flex;
+  padding: 0.38rem 0.7rem;
+  border: 1px solid #d5e3e0;
+  border-radius: 999px;
+  color: #365f58;
+  background: #f5faf9;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.practice-picker {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid #d8e2e0;
+  border-radius: 0.9rem;
+  background: #fbfdfc;
+}
+
+.practice-picker-invalid {
+  border-color: var(--bs-danger);
+}
+
+.practice-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  min-height: 4rem;
+  padding: 0.85rem;
+  border: 1px solid #e1e9e7;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  background: #fff;
+}
+
+.practice-option:hover {
+  border-color: #9dc7c0;
+}
+
+.practice-option strong,
+.practice-option small {
+  display: block;
+}
+
+.practice-option small {
+  margin-top: 0.2rem;
+  color: #748784;
+}
+
+.practice-inactive {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.breadcrumb {
+  font-size: 0.82rem;
+}
+
+.table > :not(caption) > * > * {
+  padding: 1rem 1.15rem;
+}
+
 .dashboard-card-index {
   display: inline-grid;
   min-width: 2.5rem;
@@ -474,6 +613,15 @@ body {
   .season-members > div {
     grid-template-columns: 1fr;
     gap: 0.4rem;
+  }
+
+  .weight-summary {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .practice-picker {
+    grid-template-columns: 1fr;
   }
 }
 

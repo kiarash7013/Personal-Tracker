@@ -35,6 +35,7 @@ export const fa = {
   navigation: {
     dashboard: "نمای کلی",
     seasons: "دوره‌های ارزیابی",
+    practices: "مولفه‌های کاری",
   },
   seasons: {
     title: "دوره‌های ارزیابی",
@@ -68,6 +69,7 @@ export const fa = {
     managerRole: "مدیر",
     open: "مشاهده دوره",
     editAction: "ویرایش دوره",
+    managePlan: "مدیریت پروژه‌ها و توافق‌ها",
     activate: "فعال‌سازی دوره",
     activating: "در حال فعال‌سازی…",
     setupChecklist: "آمادگی فعال‌سازی",

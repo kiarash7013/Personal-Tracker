@@ -5,7 +5,7 @@ import { signOutAction } from "@/modules/authentication/server/actions";
 
 type AppShellProps = {
   user: CurrentUser;
-  activeNavigation?: "dashboard" | "seasons";
+  activeNavigation?: "dashboard" | "seasons" | "practices";
   children: React.ReactNode;
 };
 
@@ -34,6 +34,12 @@ export function AppShell({ user, activeNavigation, children }: AppShellProps) {
               href="/seasons"
             >
               {fa.navigation.seasons}
+            </Link>
+            <Link
+              className={`app-navigation-link ${activeNavigation === "practices" ? "active" : ""}`}
+              href="/work-practices"
+            >
+              {fa.navigation.practices}
             </Link>
           </nav>
 

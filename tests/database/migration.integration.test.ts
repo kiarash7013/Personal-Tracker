@@ -22,6 +22,9 @@ const ids = {
   taskB: "00000000-0000-4000-8000-000000000011",
   practice: "00000000-0000-4000-8000-000000000012",
   taskPractice: "00000000-0000-4000-8000-000000000013",
+  agreement: "00000000-0000-4000-8000-000000000014",
+  agreementRevision: "00000000-0000-4000-8000-000000000015",
+  agreementPractice: "00000000-0000-4000-8000-000000000016",
 } as const;
 
 let database: PGlite;
@@ -177,5 +180,47 @@ describe("initial PostgreSQL migration", () => {
     await expect(
       database.exec(`UPDATE "tasks" SET "title" = 'تغییر غیرمجاز', "updated_at" = CURRENT_TIMESTAMP WHERE "id" = '${ids.taskA}';`),
     ).rejects.toThrow(/Closed season data is read-only/);
+  });
+
+  it("keeps published agreement mappings immutable and preserves practice labels", async () => {
+    await insertProjectPlans(60, 40);
+    await database.exec(`
+      INSERT INTO "work_practices" ("id", "owner_id", "name", "updated_at")
+      VALUES ('${ids.practice}', '${ids.employee}', 'تحلیل', CURRENT_TIMESTAMP);
+
+      INSERT INTO "agreements" ("id", "project_id", "updated_at")
+      VALUES ('${ids.agreement}', '${ids.agreedProjectA}', CURRENT_TIMESTAMP);
+
+      INSERT INTO "agreement_revisions" (
+        "id", "agreement_id", "project_plan_id", "season_plan_version_id",
+        "revision", "title", "agreement_type"
+      ) VALUES (
+        '${ids.agreementRevision}', '${ids.agreement}', '${ids.projectPlanA}', '${ids.plan}',
+        1, 'تحلیل کامل درخواست', 'CORE'
+      );
+
+      INSERT INTO "agreement_practices" (
+        "id", "agreement_revision_id", "work_practice_id", "practice_name_snapshot"
+      ) VALUES (
+        '${ids.agreementPractice}', '${ids.agreementRevision}', '${ids.practice}', 'تحلیل'
+      );
+
+      UPDATE "season_plan_versions"
+      SET "status" = 'PUBLISHED', "effective_at" = CURRENT_TIMESTAMP, "published_at" = CURRENT_TIMESTAMP
+      WHERE "id" = '${ids.plan}';
+
+      UPDATE "work_practices" SET "name" = 'تحلیل محصول', "updated_at" = CURRENT_TIMESTAMP
+      WHERE "id" = '${ids.practice}';
+    `);
+
+    await expect(
+      database.exec(`UPDATE "agreement_revisions" SET "title" = 'بازنویسی تاریخی' WHERE "id" = '${ids.agreementRevision}';`),
+    ).rejects.toThrow(/published.*immutable/i);
+
+    const snapshot = await database.query<{ name: string }>(
+      `SELECT "practice_name_snapshot" AS name FROM "agreement_practices" WHERE "id" = $1`,
+      [ids.agreementPractice],
+    );
+    expect(snapshot.rows[0]?.name).toBe("تحلیل");
   });
 });
