@@ -6,6 +6,7 @@ import { requireCurrentUser } from "@/modules/authentication/server/session";
 import { getSeasonAuthorizationContext } from "@/modules/authentication/server/season-access";
 import { MetricCard } from "@/modules/dashboard/components/metric-card";
 import { PerformanceReasons } from "@/modules/dashboard/components/performance-reasons";
+import { SprintTrend } from "@/modules/dashboard/components/sprint-trend";
 import { getManagerDashboard } from "@/modules/dashboard/server/queries";
 import { formatPercent, formatPersianDate, formatPersianNumber } from "@/presentation/formatters";
 
@@ -49,6 +50,8 @@ export default async function ManagerDashboardPage({ params }: { params: Promise
       primaryReason={dashboard.reasoning.primaryReason}
       supportingReasons={dashboard.reasoning.supportingReasons}
     /></div>
+
+    <div className="mb-4"><SprintTrend points={dashboard.trend} summary={dashboard.trendSummary} /></div>
 
     <section className="card app-card border-0 mb-4"><div className="card-body p-4">
       <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4"><div><h2 className="h5 mb-1">وضعیت پروژه‌ها</h2><p className="text-secondary small mb-0">وزن رسمی، فرصت مشاهده‌شده و تحقق Core هر پروژه</p></div><Link className="btn btn-sm btn-outline-primary" href={`/seasons/${seasonId}/projects`}>مشاهده توافق‌ها</Link></div>

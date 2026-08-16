@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 13 تکمیل شده است: Reasoning Engine مستقل علت اصلی و دلایل پشتیبان سطح عملکرد را از KPIها و Thresholdها استخراج می‌کند. متن‌های فارسی در Localization، خنثی و داده‌محور هستند و حالت‌های Limited Alignment، Execution Gap، Mixed، Strong، Bonus، Additional و Limited Opportunity را پوشش می‌دهند. Trend اسپرینت‌ها در Phase 14 انجام می‌شود.
+Phase 14 تکمیل شده است: Dashboardها روند تجمعی Core Achievement، Work Alignment و Aligned Execution را برای هر اسپرینت با نمودار خطی، Summary فارسی و جدول داده قابل‌دسترسی نمایش می‌دهند. گزارش نهایی و Snapshot قطعی دوره در Phase 15 انجام می‌شود.
 
 ## پیش‌نیازها
 

@@ -3,6 +3,7 @@ import type { Prisma } from "../../../../generated/prisma/client";
 import { classifyPerformance, generatePerformanceReasons } from "@/domain/calculations";
 import { DEFAULT_PERFORMANCE_SETTINGS } from "@/modules/performance-settings/domain/performance-settings";
 import { calculateDashboardMetrics, calculateSeasonElapsed } from "../application/dashboard-metrics";
+import { calculateSprintTrend, summarizeSprintTrend } from "../application/sprint-trend";
 
 async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereInput) {
   const season = await getPrisma().season.findFirst({
@@ -97,6 +98,7 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
   );
   const calculationTasks = season.tasks.map((task) => ({
     id: task.id,
+    sprintId: task.sprintId,
     projectId: task.projectId,
     approvalStatus: task.approvalStatus,
     assignmentSource: task.assignmentSource,
@@ -138,6 +140,17 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     coreOpportunityCoverage: metrics.coreAchievement.opportunityCoverage,
     thresholds: settings,
   });
+  const trend = calculateSprintTrend({
+    projects,
+    agreements,
+    tasks: calculationTasks,
+    sprints: season.sprints.map((sprint) => ({
+      id: sprint.id,
+      name: sprint.name,
+      sequenceNumber: sprint.sequenceNumber,
+    })),
+    includeSelfInitiatedInAlignment: settings.includeSelfInitiatedInAlignment,
+  });
   const now = new Date();
   const currentSprint = season.sprints.find((sprint) => sprint.status === "ACTIVE")
     ?? season.sprints.find((sprint) => sprint.startDate <= now && sprint.endDate >= now)
@@ -161,6 +174,8 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     metrics,
     classification,
     reasoning,
+    trend,
+    trendSummary: summarizeSprintTrend(trend),
     settings,
     counts: {
       finalized: season.tasks.length - draftTasks.length,

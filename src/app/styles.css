@@ -885,6 +885,50 @@ body {
   line-height: 1.7;
 }
 
+.trend-chart-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.trend-chart {
+  display: block;
+  width: 100%;
+  min-width: 36rem;
+  height: auto;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  color: #596f6a;
+  font-size: 0.75rem;
+}
+
+.chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chart-legend i {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.2rem;
+  border-radius: 999px;
+}
+
+.trend-summary {
+  margin: 1rem 0 0;
+  padding: 0.9rem 1rem;
+  border-radius: 0.75rem;
+  color: #405d57;
+  background: #f3f8f7;
+  line-height: 1.8;
+}
+
 .dashboard-card-index {
   display: inline-grid;
   min-width: 2.5rem;

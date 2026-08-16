@@ -6,6 +6,7 @@ import { requireCurrentUser } from "@/modules/authentication/server/session";
 import { getSeasonAuthorizationContext } from "@/modules/authentication/server/season-access";
 import { MetricCard } from "@/modules/dashboard/components/metric-card";
 import { PerformanceReasons } from "@/modules/dashboard/components/performance-reasons";
+import { SprintTrend } from "@/modules/dashboard/components/sprint-trend";
 import { getEmployeeDashboard } from "@/modules/dashboard/server/queries";
 import { formatPercent, formatPersianDate, formatPersianNumber } from "@/presentation/formatters";
 
@@ -60,6 +61,8 @@ export default async function EmployeeDashboardPage({ params }: { params: Promis
       <div className="d-flex align-items-center justify-content-between gap-3 mb-2"><div><h2 className="h5 mb-1">زمان سپری‌شده دوره</h2><p className="text-secondary small mb-0">این شاخص فقط Context زمانی است و امتیاز عملکرد نیست.</p></div><strong>{formatPercent(dashboard.season.elapsed)}</strong></div>
       <div aria-label={`${formatPercent(dashboard.season.elapsed)} از دوره سپری شده`} aria-valuemax={100} aria-valuemin={0} aria-valuenow={Math.round(dashboard.season.elapsed)} className="progress" role="progressbar"><div className="progress-bar" style={{ width: `${dashboard.season.elapsed}%` }} /></div>
     </div></section>
+
+    <div className="mb-4"><SprintTrend points={dashboard.trend} summary={dashboard.trendSummary} /></div>
 
     <div className="row g-4 mb-4">
       <div className="col-lg-5"><section className="card app-card border-0 h-100"><div className="card-body p-4">
