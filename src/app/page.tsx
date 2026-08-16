@@ -10,6 +10,7 @@ export default async function HomePage() {
   const seasons = await listAccessibleSeasons(user.id);
   const activeSeason = seasons.find((season) => season.status === "ACTIVE");
   const ownsActiveSeason = activeSeason?.employeeId === user.id;
+  const managesActiveSeason = activeSeason?.members[0]?.role === "MANAGER";
   const draftCount = seasons.filter((season) => season.status === "DRAFT").length;
 
   return (
@@ -62,11 +63,11 @@ export default async function HomePage() {
         <div>
           <span className="small opacity-75">گام بعدی</span>
           <h2 className="h5 mb-0 mt-1">
-            {ownsActiveSeason ? "داشبورد دوره فعال را بررسی کنید" : seasons.length === 0 ? "اولین دوره ارزیابی را ایجاد کنید" : "مدیریت دوره‌های ارزیابی"}
+            {ownsActiveSeason || managesActiveSeason ? "داشبورد دوره فعال را بررسی کنید" : seasons.length === 0 ? "اولین دوره ارزیابی را ایجاد کنید" : "مدیریت دوره‌های ارزیابی"}
           </h2>
         </div>
-        <Link className="btn btn-light" href={ownsActiveSeason ? `/seasons/${activeSeason.id}/dashboard` : seasons.length === 0 ? "/seasons/new" : "/seasons"}>
-          {ownsActiveSeason ? "مشاهده داشبورد" : seasons.length === 0 ? fa.seasons.create : fa.seasons.title}
+        <Link className="btn btn-light" href={ownsActiveSeason ? `/seasons/${activeSeason.id}/dashboard` : managesActiveSeason ? `/seasons/${activeSeason.id}/manager-dashboard` : seasons.length === 0 ? "/seasons/new" : "/seasons"}>
+          {ownsActiveSeason || managesActiveSeason ? "مشاهده داشبورد" : seasons.length === 0 ? fa.seasons.create : fa.seasons.title}
         </Link>
       </section>
     </AppShell>

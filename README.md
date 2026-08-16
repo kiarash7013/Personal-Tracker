@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 10 تکمیل شده است: داشبورد واقعی کارمند KPIهای Core Achievement، Work Alignment، Aligned Execution، Bonus و Additional Contribution را مستقیماً از Plan منتشرشده و Taskهای نهایی محاسبه می‌کند. دوره/اسپرینت جاری، زمان سپری‌شده، Draftها، Missing Evidence، آخرین Taskها و جزئیات numerator/denominator نیز نمایش داده می‌شوند. داشبورد فقط‌خواندنی Manager در Phase 11 انجام می‌شود.
+Phase 11 تکمیل شده است: Manager داشبورد فقط‌خواندنی با KPIهای اصلی، وضعیت پروژه‌ها، Opportunity Coverage، تسک‌های اخیر و Context خنثی داده‌ها دارد و می‌تواند تا Agreement، Task و Evidence Drill-down کند. هیچ Action نوشتنی برای Manager وجود ندارد. Classification سطح عملکرد در Phase 12 انجام می‌شود.
 
 ## پیش‌نیازها
 

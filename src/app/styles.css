@@ -836,6 +836,26 @@ body {
   font-size: 1.2rem;
 }
 
+.manager-dashboard-heading {
+  padding: 1.5rem;
+  border: 1px solid #dce7e4;
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.performance-level-pending {
+  background: linear-gradient(145deg, #fffaf0, #fff);
+}
+
+.neutral-observation {
+  padding: 0.9rem 1rem;
+  border-inline-start: 0.25rem solid #7eb4ac;
+  border-radius: 0.4rem;
+  color: #415d58;
+  background: #f4f9f8;
+  line-height: 1.8;
+}
+
 .dashboard-card-index {
   display: inline-grid;
   min-width: 2.5rem;

@@ -1,15 +1,17 @@
 import { getPrisma } from "@/infrastructure/database/prisma";
+import type { Prisma } from "../../../../generated/prisma/client";
 import { calculateDashboardMetrics, calculateSeasonElapsed } from "../application/dashboard-metrics";
 
-export async function getEmployeeDashboard(seasonId: string, employeeId: string) {
+async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereInput) {
   const season = await getPrisma().season.findFirst({
-    where: { id: seasonId, employeeId },
+    where: { id: seasonId, ...accessWhere },
     select: {
       id: true,
       name: true,
       status: true,
       startDate: true,
       endDate: true,
+      employee: { select: { name: true, email: true } },
       sprints: {
         orderBy: { sequenceNumber: "asc" },
         select: { id: true, name: true, sequenceNumber: true, status: true, startDate: true, endDate: true },
@@ -116,6 +118,7 @@ export async function getEmployeeDashboard(seasonId: string, employeeId: string)
       startDate: season.startDate,
       endDate: season.endDate,
       elapsed: calculateSeasonElapsed(season.startDate, season.endDate),
+      employee: season.employee,
     },
     currentSprint,
     metrics,
@@ -128,7 +131,25 @@ export async function getEmployeeDashboard(seasonId: string, employeeId: string)
     draftTasks: draftTasks.slice(0, 5),
     missingEvidenceTasks: missingEvidenceTasks.slice(0, 5),
     recentTasks: season.tasks.slice(0, 6),
+    projectSummaries: projects.map((project) => ({
+      ...project,
+      finalizedTaskCount: season.tasks.filter(
+        (task) => task.projectId === project.id && task.approvalStatus === "FINAL_APPROVED",
+      ).length,
+      coreAchievement: metrics.coreAchievement.projects.find((item) => item.projectId === project.id)?.achievement ?? null,
+      opportunityCoverage: metrics.coreAchievement.projects.find((item) => item.projectId === project.id)?.opportunityCoverage ?? 0,
+    })),
     projects,
     agreements,
   };
+}
+
+export function getEmployeeDashboard(seasonId: string, employeeId: string) {
+  return loadDashboard(seasonId, { employeeId });
+}
+
+export function getManagerDashboard(seasonId: string, managerId: string) {
+  return loadDashboard(seasonId, {
+    members: { some: { userId: managerId, role: "MANAGER" } },
+  });
 }

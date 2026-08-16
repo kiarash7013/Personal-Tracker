@@ -88,6 +88,11 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
           </div>
         ) : (
           <div className="d-flex flex-wrap gap-2">
+            {context.role === "MANAGER" ? (
+              <Link className="btn btn-primary" href={`/seasons/${season.id}/manager-dashboard`}>
+                داشبورد مدیر
+              </Link>
+            ) : null}
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/projects`}>
               {fa.seasons.managePlan}
             </Link>
