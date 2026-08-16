@@ -184,7 +184,40 @@ body {
 
 .app-header .container,
 .app-page main {
-  max-width: 1040px;
+  max-width: 1180px;
+}
+
+.app-header {
+  z-index: 1020;
+}
+
+.app-navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  border-radius: 0.85rem;
+  background: var(--surface-muted);
+}
+
+.app-navigation-link {
+  padding: 0.5rem 0.8rem;
+  border-radius: 0.65rem;
+  color: #526966;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-navigation-link:hover,
+.app-navigation-link.active {
+  color: var(--brand-700);
+  background: #fff;
+}
+
+.app-user-email {
+  display: block;
+  font-size: 0.72rem;
 }
 
 .dashboard-hero {
@@ -202,6 +235,166 @@ body {
 .dashboard-card {
   border-radius: 1.25rem;
   box-shadow: 0 8px 24px rgba(21, 59, 58, 0.06);
+}
+
+.metric-label {
+  display: block;
+  margin-bottom: 0.65rem;
+  color: #667b78;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.metric-value {
+  display: block;
+  color: var(--brand-950);
+  font-size: 2rem;
+  line-height: 1.2;
+}
+
+.metric-value-text {
+  margin-bottom: 0.4rem;
+  font-size: 1.2rem;
+}
+
+.app-card {
+  border-radius: 1.15rem;
+  box-shadow: 0 8px 28px rgba(21, 59, 58, 0.065);
+}
+
+.section-kicker {
+  direction: ltr;
+  color: var(--brand-600);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.page-heading {
+  max-width: 100%;
+}
+
+.empty-state {
+  min-height: 25rem;
+  place-content: center;
+}
+
+.empty-state p {
+  max-width: 34rem;
+  line-height: 1.9;
+}
+
+.empty-state-icon {
+  display: grid;
+  width: 4rem;
+  height: 4rem;
+  place-items: center;
+  border-radius: 1.2rem;
+  color: var(--brand-700);
+  background: var(--brand-100);
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.season-card {
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.season-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(21, 59, 58, 0.1);
+}
+
+.status-pill,
+.role-chip {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.status-draft {
+  color: #7a5a00;
+  background: #fff3cd;
+}
+
+.status-active {
+  color: #0f5e46;
+  background: #d8f3e9;
+}
+
+.status-closed {
+  color: #53625f;
+  background: #e8edeb;
+}
+
+.role-chip {
+  color: #365f73;
+  background: #e6f2f8;
+}
+
+.season-counts {
+  color: #5e7571;
+  font-size: 0.8rem;
+}
+
+.season-counts span::before {
+  display: inline-block;
+  width: 0.4rem;
+  height: 0.4rem;
+  margin-inline-end: 0.35rem;
+  border-radius: 50%;
+  content: "";
+  background: #80aaa4;
+}
+
+.season-members > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.35fr) 1fr;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #edf1f0;
+}
+
+.season-members > div:first-child {
+  padding-top: 0;
+}
+
+.season-members > div:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.season-members dt {
+  color: #6d817e;
+  font-size: 0.82rem;
+}
+
+.season-members dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+.season-members small {
+  display: block;
+  margin-top: 0.25rem;
+  color: #7b8d8a;
+  font-size: 0.72rem;
+  font-weight: 400;
+}
+
+.setup-checklist {
+  padding-inline-start: 1.2rem;
+  color: #6a5a2c;
+  font-size: 0.88rem;
+  line-height: 2;
+}
+
+.activation-ready {
+  box-shadow: inset 0 0 0 1px rgba(26, 135, 94, 0.22), 0 8px 28px rgba(21, 59, 58, 0.065);
 }
 
 .dashboard-card-index {
@@ -266,6 +459,21 @@ body {
 
   .dashboard-hero {
     padding: 1.5rem;
+  }
+
+  .app-header .container {
+    justify-content: center !important;
+  }
+
+  .app-navigation {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .season-members > div {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
   }
 }
 

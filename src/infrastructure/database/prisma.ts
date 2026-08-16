@@ -16,6 +16,10 @@ export function getPrisma() {
 
   const prisma = new PrismaClient({
     adapter: new PrismaPg({ connectionString }),
+    transactionOptions: {
+      maxWait: 10_000,
+      timeout: 20_000,
+    },
   });
 
   if (process.env.NODE_ENV !== "production") {
