@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 16 تکمیل شده است: گزارش نهایی و Snapshotهای immutable مرحله قبل اکنون با QA ساختاری RTL، ناوبری صفحه‌کلید، لینک پرش به محتوای اصلی، landmarkهای معنایی، وضعیت فعال ناوبری و مسیر جایگزین متنی برای نمودار پوشش داده شده‌اند. مرحله 17 به Production Hardening اختصاص دارد.
+هر ۱۷ مرحله MVP تکمیل شده است. سامانه شامل Workflow کامل دوره، پروژه، توافق، مولفه کاری، اسپرینت و تسک؛ داشبورد کارمند و مدیر؛ Calculation/Reasoning مستقل؛ Trend؛ گزارش نهایی و Snapshot immutable؛ QA دسترس‌پذیری/RTL؛ و سخت‌سازی Production است.
 
 ## پیش‌نیازها
 
@@ -23,9 +23,17 @@ pnpm db:seed
 pnpm dev
 ```
 
+برای اجرای کل دروازهٔ کیفیت در یک دستور:
+
+```bash
+pnpm verify
+```
+
 پروژه از Supabase Postgres به‌عنوان دیتابیس اصلی استفاده می‌کند. `DATABASE_URL` برای Runtime و `DIRECT_URL` برای Prisma CLI و Migration است. Connection Stringها را از دکمه **Connect** پروژه Supabase دریافت کنید و Secretها را فقط در `.env` یا تنظیمات محیط استقرار نگه دارید.
 
 راهنمای کامل اتصال و تصمیم امنیتی Prisma/Data API در [docs/supabase.md](docs/supabase.md) ثبت شده است.
+
+Runtime از یک Prisma singleton و pool محدود استفاده می‌کند. مقادیر `DATABASE_POOL_MAX`، `DATABASE_CONNECTION_TIMEOUT_MS` و `DATABASE_IDLE_TIMEOUT_MS` را متناسب با ظرفیت Supabase و تعداد instanceهای استقرار تنظیم کنید؛ مجموع connectionهای همه instanceها باید پایین‌تر از ظرفیت پروژه بماند.
 
 > نکته اتصال محلی: Runtime از اتصال مستقیم PostgreSQL/Supavisor استفاده می‌کند. اگر شبکه محلی پورت‌های `5432` و `6543` را مسدود کند، `pnpm build` و تست‌های مستقل از شبکه اجرا می‌شوند اما Workflowهای متصل به دیتابیس باید روی شبکه مجاز یا محیط استقرار اجرا شوند.
 
@@ -35,6 +43,8 @@ pnpm dev
 - `manager@example.test`
 
 مقدار رمز هر حساب همان مقداری است که پیش از اجرای Seed در متغیر متناظر تعیین می‌کنید.
+
+در Production، Seed توسعه را اجرا نکنید و همه secretها را فقط در secret manager محیط استقرار نگه دارید. چک‌لیست کامل استقرار، headerهای امنیتی، health check و rollback در [مستند Phase 17](docs/phase-17-production-hardening.md) آمده است.
 
 ## Authentication و Authorization
 
@@ -67,3 +77,5 @@ pnpm lint
 pnpm test
 pnpm build
 ```
+
+همین بررسی‌ها روی هر Push و Pull Request توسط GitHub Actions اجرا می‌شوند.

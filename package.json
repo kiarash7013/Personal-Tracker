@@ -15,6 +15,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "verify": "pnpm db:validate && pnpm typecheck && pnpm lint && pnpm test && pnpm build",
     "db:generate": "prisma generate",
     "db:validate": "prisma validate",
     "db:status": "prisma migrate status",

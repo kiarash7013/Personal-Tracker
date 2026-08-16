@@ -1,4 +1,7 @@
-export const SESSION_COOKIE_NAME = "personal_tracker_session";
+export const SESSION_COOKIE_NAME =
+  process.env.NODE_ENV === "production"
+    ? "__Host-personal_tracker_session"
+    : "personal_tracker_session";
 
 const DEVELOPMENT_AUTH_SECRET =
   "personal-tracker-local-development-secret-only";

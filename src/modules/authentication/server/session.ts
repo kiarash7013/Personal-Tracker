@@ -26,6 +26,7 @@ export async function setSessionCookie(userId: string) {
     secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: SESSION_DURATION_SECONDS,
+    priority: "high",
   });
 }
 
