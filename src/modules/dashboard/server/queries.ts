@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { getPrisma } from "@/infrastructure/database/prisma";
 import type { Prisma } from "../../../../generated/prisma/client";
 import { classifyPerformance, generatePerformanceReasons } from "@/domain/calculations";
@@ -5,8 +6,14 @@ import { DEFAULT_PERFORMANCE_SETTINGS } from "@/modules/performance-settings/dom
 import { calculateDashboardMetrics, calculateSeasonElapsed } from "../application/dashboard-metrics";
 import { calculateSprintTrend, summarizeSprintTrend } from "../application/sprint-trend";
 
-async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereInput) {
-  const season = await getPrisma().season.findFirst({
+type DashboardDbClient = ReturnType<typeof getPrisma> | Prisma.TransactionClient;
+
+async function loadDashboard(
+  database: DashboardDbClient,
+  seasonId: string,
+  accessWhere: Prisma.SeasonWhereInput,
+) {
+  const season = await database.season.findFirst({
     where: { id: seasonId, ...accessWhere },
     select: {
       id: true,
@@ -152,6 +159,12 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     includeSelfInitiatedInAlignment: settings.includeSelfInitiatedInAlignment,
   });
   const now = new Date();
+  const inputHash = createHash("sha256").update(JSON.stringify({
+    projects,
+    agreements,
+    tasks: calculationTasks,
+    settings,
+  })).digest("hex");
   const currentSprint = season.sprints.find((sprint) => sprint.status === "ACTIVE")
     ?? season.sprints.find((sprint) => sprint.startDate <= now && sprint.endDate >= now)
     ?? null;
@@ -176,6 +189,7 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     reasoning,
     trend,
     trendSummary: summarizeSprintTrend(trend),
+    inputHash,
     settings,
     counts: {
       finalized: season.tasks.length - draftTasks.length,
@@ -200,11 +214,19 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
 }
 
 export function getEmployeeDashboard(seasonId: string, employeeId: string) {
-  return loadDashboard(seasonId, { employeeId });
+  return loadDashboard(getPrisma(), seasonId, { employeeId });
 }
 
 export function getManagerDashboard(seasonId: string, managerId: string) {
-  return loadDashboard(seasonId, {
+  return loadDashboard(getPrisma(), seasonId, {
     members: { some: { userId: managerId, role: "MANAGER" } },
   });
+}
+
+export function getEmployeeDashboardInTransaction(
+  transaction: Prisma.TransactionClient,
+  seasonId: string,
+  employeeId: string,
+) {
+  return loadDashboard(transaction, seasonId, { employeeId });
 }

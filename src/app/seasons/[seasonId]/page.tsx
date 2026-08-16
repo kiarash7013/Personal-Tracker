@@ -66,6 +66,11 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
         </div>
         {canEdit ? (
           <div className="d-flex flex-wrap gap-2">
+            {season.status !== "DRAFT" ? (
+              <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/report`}>
+                گزارش نهایی
+              </Link>
+            ) : null}
             {season.status === "ACTIVE" ? (
               <Link className="btn btn-primary" href={`/seasons/${season.id}/dashboard`}>
                 داشبورد دوره
@@ -94,6 +99,11 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
             {context.role === "MANAGER" ? (
               <Link className="btn btn-primary" href={`/seasons/${season.id}/manager-dashboard`}>
                 داشبورد مدیر
+              </Link>
+            ) : null}
+            {season.status !== "DRAFT" ? (
+              <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/report`}>
+                گزارش نهایی
               </Link>
             ) : null}
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/projects`}>

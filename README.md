@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 14 تکمیل شده است: Dashboardها روند تجمعی Core Achievement، Work Alignment و Aligned Execution را برای هر اسپرینت با نمودار خطی، Summary فارسی و جدول داده قابل‌دسترسی نمایش می‌دهند. گزارش نهایی و Snapshot قطعی دوره در Phase 15 انجام می‌شود.
+Phase 15 تکمیل شده است: گزارش نهایی دوره شامل Level، KPIها، Reasonها، پروژه/توافق، پوشش مولفه‌ها، Trend، Audit Context و Drill-down کامل است. بستن دوره در Transaction یک Snapshot immutable با Input Hash و Revision می‌سازد؛ Reopen تاریخچه را حفظ می‌کند. مرحله 16 به QA دسترس‌پذیری و RTL اختصاص دارد.
 
 ## پیش‌نیازها
 

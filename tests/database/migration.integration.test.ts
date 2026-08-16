@@ -25,6 +25,8 @@ const ids = {
   agreement: "00000000-0000-4000-8000-000000000014",
   agreementRevision: "00000000-0000-4000-8000-000000000015",
   agreementPractice: "00000000-0000-4000-8000-000000000016",
+  snapshot: "00000000-0000-4000-8000-000000000017",
+  snapshotDetail: "00000000-0000-4000-8000-000000000018",
 } as const;
 
 let database: PGlite;
@@ -237,5 +239,30 @@ describe("initial PostgreSQL migration", () => {
         DATE '2026-07-20', DATE '2026-08-16', 'ACTIVE', CURRENT_TIMESTAMP
       );
     `)).rejects.toThrow(/sprints_one_active_per_season_idx|duplicate key/i);
+  });
+
+  it("preserves final report labels independently from later entity names", async () => {
+    await database.exec(`
+      INSERT INTO "performance_snapshots" (
+        "id", "season_id", "scope", "revision", "as_of", "calculation_version",
+        "input_hash", "metric_status", "supporting_reasons", "season_elapsed"
+      ) VALUES (
+        '${ids.snapshot}', '${ids.season}', 'SEASON', 1, CURRENT_TIMESTAMP, '1.0.0',
+        'fixture-hash', 'CALCULATED', ARRAY[]::"PerformanceReasonCode"[], 100
+      );
+      INSERT INTO "snapshot_metric_details" (
+        "id", "snapshot_id", "metric_key", "entity_type", "entity_id", "label_snapshot", "value"
+      ) VALUES (
+        '${ids.snapshotDetail}', '${ids.snapshot}', 'PROJECT_CORE_ACHIEVEMENT', 'Project',
+        '${ids.agreedProjectA}', 'پیشخوان', 93
+      );
+      UPDATE "projects" SET "name" = 'نام جدید', "updated_at" = CURRENT_TIMESTAMP
+      WHERE "id" = '${ids.agreedProjectA}';
+    `);
+    const result = await database.query<{ label: string }>(
+      `SELECT "label_snapshot" AS label FROM "snapshot_metric_details" WHERE "id" = $1`,
+      [ids.snapshotDetail],
+    );
+    expect(result.rows[0]?.label).toBe("پیشخوان");
   });
 });
