@@ -66,7 +66,12 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
         </div>
         {canEdit ? (
           <div className="d-flex flex-wrap gap-2">
-            <Link className="btn btn-primary" href={`/seasons/${season.id}/projects`}>
+            {season.status === "ACTIVE" ? (
+              <Link className="btn btn-primary" href={`/seasons/${season.id}/dashboard`}>
+                داشبورد دوره
+              </Link>
+            ) : null}
+            <Link className={season.status === "ACTIVE" ? "btn btn-outline-primary" : "btn btn-primary"} href={`/seasons/${season.id}/projects`}>
               {fa.seasons.managePlan}
             </Link>
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/sprints`}>

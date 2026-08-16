@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 9 تکمیل شده است: Workflow سریع ثبت و ویرایش تسک شامل Project/Sprint، منبع تخصیص، وضعیت Practiceها، Evidence URL، وضعیت نهایی و پیشنهاد تطبیق Agreement در دسترس است. پروژه‌های خارج از توافق جدا ثبت می‌شوند، وزن رسمی ندارند و برای گزارش Additional Contribution آماده‌اند. داشبورد کارمند در Phase 10 انجام می‌شود.
+Phase 10 تکمیل شده است: داشبورد واقعی کارمند KPIهای Core Achievement، Work Alignment، Aligned Execution، Bonus و Additional Contribution را مستقیماً از Plan منتشرشده و Taskهای نهایی محاسبه می‌کند. دوره/اسپرینت جاری، زمان سپری‌شده، Draftها، Missing Evidence، آخرین Taskها و جزئیات numerator/denominator نیز نمایش داده می‌شوند. داشبورد فقط‌خواندنی Manager در Phase 11 انجام می‌شود.
 
 ## پیش‌نیازها
 
