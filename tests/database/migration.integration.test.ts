@@ -3,10 +3,10 @@ import { fileURLToPath } from "node:url";
 import { PGlite } from "@electric-sql/pglite";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
-const migrationUrl = new URL(
-  "../../prisma/migrations/20260815150000_initial_schema/migration.sql",
-  import.meta.url,
-);
+const migrationUrls = [
+  new URL("../../prisma/migrations/20260815150000_initial_schema/migration.sql", import.meta.url),
+  new URL("../../prisma/migrations/20260816160000_one_active_sprint_per_season/migration.sql", import.meta.url),
+];
 
 const ids = {
   employee: "00000000-0000-4000-8000-000000000001",
@@ -85,8 +85,10 @@ async function insertDraftTask(taskId: string, code: string) {
 
 beforeEach(async () => {
   database = new PGlite();
-  const migration = await readFile(fileURLToPath(migrationUrl), "utf8");
-  await database.exec(migration);
+  for (const migrationUrl of migrationUrls) {
+    const migration = await readFile(fileURLToPath(migrationUrl), "utf8");
+    await database.exec(migration);
+  }
   await createBaseFixture();
 });
 
@@ -222,5 +224,18 @@ describe("initial PostgreSQL migration", () => {
       [ids.agreementPractice],
     );
     expect(snapshot.rows[0]?.name).toBe("تحلیل");
+  });
+
+  it("allows only one active sprint in a season", async () => {
+    await database.exec(`UPDATE "sprints" SET "status" = 'ACTIVE' WHERE "id" = '${ids.sprint}';`);
+
+    await expect(database.exec(`
+      INSERT INTO "sprints" (
+        "id", "season_id", "name", "sequence_number", "start_date", "end_date", "status", "updated_at"
+      ) VALUES (
+        '00000000-0000-4000-8000-000000000099', '${ids.season}', 'اسپرینت فعال دوم', 2,
+        DATE '2026-07-20', DATE '2026-08-16', 'ACTIVE', CURRENT_TIMESTAMP
+      );
+    `)).rejects.toThrow(/sprints_one_active_per_season_idx|duplicate key/i);
   });
 });

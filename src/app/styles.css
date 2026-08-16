@@ -536,6 +536,39 @@ body {
   padding: 1rem 1.15rem;
 }
 
+.sprint-row {
+  overflow: hidden;
+}
+
+.sprint-row::before {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 0.3rem;
+  content: "";
+  background: #cbd7d5;
+}
+
+.sprint-active::before {
+  background: #36a77c;
+}
+
+.sprint-closed::before {
+  background: #7e8e8b;
+}
+
+.sprint-sequence {
+  display: inline-grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--brand-800);
+  background: var(--brand-100);
+  font-weight: 800;
+}
+
 .dashboard-card-index {
   display: inline-grid;
   min-width: 2.5rem;

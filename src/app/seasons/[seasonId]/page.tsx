@@ -69,14 +69,22 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
             <Link className="btn btn-primary" href={`/seasons/${season.id}/projects`}>
               {fa.seasons.managePlan}
             </Link>
+            <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/sprints`}>
+              {fa.seasons.manageSprints}
+            </Link>
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/edit`}>
               {fa.seasons.editAction}
             </Link>
           </div>
         ) : (
-          <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/projects`}>
-            {fa.seasons.managePlan}
-          </Link>
+          <div className="d-flex flex-wrap gap-2">
+            <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/projects`}>
+              {fa.seasons.managePlan}
+            </Link>
+            <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/sprints`}>
+              {fa.seasons.manageSprints}
+            </Link>
+          </div>
         )}
       </div>
 
