@@ -72,6 +72,11 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/sprints`}>
               {fa.seasons.manageSprints}
             </Link>
+            {season.status === "ACTIVE" ? (
+              <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/tasks`}>
+                {fa.seasons.manageTasks}
+              </Link>
+            ) : null}
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/edit`}>
               {fa.seasons.editAction}
             </Link>
@@ -83,6 +88,9 @@ export default async function SeasonDetailsPage({ params, searchParams }: Season
             </Link>
             <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/sprints`}>
               {fa.seasons.manageSprints}
+            </Link>
+            <Link className="btn btn-outline-primary" href={`/seasons/${season.id}/tasks`}>
+              {fa.seasons.manageTasks}
             </Link>
           </div>
         )}

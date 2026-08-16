@@ -71,6 +71,7 @@ export const fa = {
     editAction: "ویرایش دوره",
     managePlan: "مدیریت پروژه‌ها و توافق‌ها",
     manageSprints: "مدیریت اسپرینت‌ها",
+    manageTasks: "تسک‌ها",
     activate: "فعال‌سازی دوره",
     activating: "در حال فعال‌سازی…",
     setupChecklist: "آمادگی فعال‌سازی",

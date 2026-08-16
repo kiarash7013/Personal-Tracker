@@ -569,6 +569,115 @@ body {
   font-weight: 800;
 }
 
+.task-code {
+  color: #55706b;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.task-status-draft {
+  color: #6d560c;
+  background: #fff1bd;
+}
+
+.task-status-in_progress {
+  color: #245d7a;
+  background: #dceff8;
+}
+
+.task-status-final_approved {
+  color: #155f49;
+  background: #d9f2e8;
+}
+
+.task-practice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.task-practice-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 10rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem;
+  border: 1px solid #e0e9e7;
+  border-radius: 0.8rem;
+  background: #fbfdfc;
+}
+
+.task-practice-row strong,
+.task-practice-row small {
+  display: block;
+}
+
+.task-practice-row small {
+  margin-top: 0.2rem;
+  color: #748784;
+}
+
+.evidence-row {
+  display: grid;
+  grid-template-columns: 8rem minmax(9rem, 0.7fr) minmax(12rem, 1.3fr) auto;
+  gap: 0.75rem;
+}
+
+.practice-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border-radius: 0.75rem;
+  background: #f7faf9;
+}
+
+.practice-status-done {
+  color: #155f49;
+  background: #d9f2e8;
+}
+
+.practice-status-not_done {
+  color: #7b3030;
+  background: #f8dddd;
+}
+
+.practice-status-not_applicable {
+  color: #53625f;
+  background: #e5eae8;
+}
+
+.evidence-link {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.45rem 0.75rem;
+  height: 100%;
+  padding: 1rem;
+  border: 1px solid #dce7e4;
+  border-radius: 0.8rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.evidence-link:hover {
+  border-color: #8ebdb5;
+  background: #f8fcfb;
+}
+
+.evidence-link small {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: #6e817e;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pre-wrap {
+  white-space: pre-wrap;
+}
+
 .dashboard-card-index {
   display: inline-grid;
   min-width: 2.5rem;
@@ -654,6 +763,15 @@ body {
   }
 
   .practice-picker {
+    grid-template-columns: 1fr;
+  }
+
+  .task-practice-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .task-practice-row,
+  .evidence-row {
     grid-template-columns: 1fr;
   }
 }
