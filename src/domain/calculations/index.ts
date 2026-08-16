@@ -7,5 +7,6 @@ export * from "./errors";
 export * from "./portfolio-achievement";
 export * from "./project-achievement";
 export * from "./project-weights";
+export * from "./reasoning";
 export * from "./types";
 export * from "./work-alignment";

@@ -5,6 +5,7 @@ import { can } from "@/modules/authentication/domain/authorization";
 import { requireCurrentUser } from "@/modules/authentication/server/session";
 import { getSeasonAuthorizationContext } from "@/modules/authentication/server/season-access";
 import { MetricCard } from "@/modules/dashboard/components/metric-card";
+import { PerformanceReasons } from "@/modules/dashboard/components/performance-reasons";
 import { getEmployeeDashboard } from "@/modules/dashboard/server/queries";
 import { formatPercent, formatPersianDate, formatPersianNumber } from "@/presentation/formatters";
 
@@ -42,6 +43,18 @@ export default async function EmployeeDashboardPage({ params }: { params: Promis
       <div className="col-md-6 col-xl"><MetricCard helper="تحقق جداگانه توافق‌های امتیازی" status={metrics.bonusAchievement.status} title="تحقق امتیازی" tone="warning" value={metrics.bonusAchievement.value} /></div>
       <div className="col-md-6 col-xl"><MetricCard denominator={metrics.additionalContribution.denominator} helper="سهم تسک‌های نهایی خارج از توافق اولیه" numerator={metrics.additionalContribution.numerator} status={metrics.additionalContribution.status} title="مشارکت خارج توافق" tone="neutral" value={metrics.additionalContribution.value} /></div>
     </div>
+
+    <div className="mb-4"><PerformanceReasons
+      metrics={{
+        workAlignment: metrics.workAlignment.value,
+        alignedExecution: metrics.alignedExecution.value,
+        bonusAchievement: metrics.bonusAchievement.value,
+        additionalContribution: metrics.additionalContribution.value,
+        coreOpportunityCoverage: metrics.coreAchievement.opportunityCoverage,
+      }}
+      primaryReason={dashboard.reasoning.primaryReason}
+      supportingReasons={dashboard.reasoning.supportingReasons}
+    /></div>
 
     <section className="card app-card border-0 mb-4"><div className="card-body p-4">
       <div className="d-flex align-items-center justify-content-between gap-3 mb-2"><div><h2 className="h5 mb-1">زمان سپری‌شده دوره</h2><p className="text-secondary small mb-0">این شاخص فقط Context زمانی است و امتیاز عملکرد نیست.</p></div><strong>{formatPercent(dashboard.season.elapsed)}</strong></div>

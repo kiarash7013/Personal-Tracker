@@ -856,6 +856,35 @@ body {
   line-height: 1.8;
 }
 
+.reason-section {
+  border-inline-start: 0.3rem solid var(--brand-600) !important;
+}
+
+.supporting-reasons {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+}
+
+.supporting-reasons > div {
+  padding: 0.9rem;
+  border-radius: 0.75rem;
+  background: #f5f9f8;
+}
+
+.supporting-reasons strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.supporting-reasons p {
+  margin: 0;
+  color: #6b7d79;
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+
 .dashboard-card-index {
   display: inline-grid;
   min-width: 2.5rem;

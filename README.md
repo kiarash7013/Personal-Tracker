@@ -4,7 +4,7 @@
 
 ## وضعیت پیاده‌سازی
 
-Phase 12 تکمیل شده است: سطح عملکرد با Thresholdهای قابل تنظیم و versioned به سه سطح «بخشی از توافق»، «در سطح انتظار» و «فراتر از سطح انتظار» طبقه‌بندی می‌شود. Core صددرصد به‌تنهایی Exceeds نیست و Bonus/Additional فقط پس از برآورده شدن Core اثر مثبت دارند. Reasoning Engine در Phase 13 انجام می‌شود.
+Phase 13 تکمیل شده است: Reasoning Engine مستقل علت اصلی و دلایل پشتیبان سطح عملکرد را از KPIها و Thresholdها استخراج می‌کند. متن‌های فارسی در Localization، خنثی و داده‌محور هستند و حالت‌های Limited Alignment، Execution Gap، Mixed، Strong، Bonus، Additional و Limited Opportunity را پوشش می‌دهند. Trend اسپرینت‌ها در Phase 14 انجام می‌شود.
 
 ## پیش‌نیازها
 

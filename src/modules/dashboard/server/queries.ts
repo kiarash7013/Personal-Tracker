@@ -1,6 +1,6 @@
 import { getPrisma } from "@/infrastructure/database/prisma";
 import type { Prisma } from "../../../../generated/prisma/client";
-import { classifyPerformance } from "@/domain/calculations";
+import { classifyPerformance, generatePerformanceReasons } from "@/domain/calculations";
 import { DEFAULT_PERFORMANCE_SETTINGS } from "@/modules/performance-settings/domain/performance-settings";
 import { calculateDashboardMetrics, calculateSeasonElapsed } from "../application/dashboard-metrics";
 
@@ -131,6 +131,13 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     additionalTaskCount: metrics.additionalContribution.numerator,
     thresholds: settings,
   });
+  const reasoning = generatePerformanceReasons({
+    classification,
+    workAlignment: metrics.workAlignment.value,
+    alignedExecution: metrics.alignedExecution.value,
+    coreOpportunityCoverage: metrics.coreAchievement.opportunityCoverage,
+    thresholds: settings,
+  });
   const now = new Date();
   const currentSprint = season.sprints.find((sprint) => sprint.status === "ACTIVE")
     ?? season.sprints.find((sprint) => sprint.startDate <= now && sprint.endDate >= now)
@@ -153,6 +160,7 @@ async function loadDashboard(seasonId: string, accessWhere: Prisma.SeasonWhereIn
     currentSprint,
     metrics,
     classification,
+    reasoning,
     settings,
     counts: {
       finalized: season.tasks.length - draftTasks.length,
