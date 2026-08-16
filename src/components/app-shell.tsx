@@ -24,18 +24,21 @@ export function AppShell({ user, activeNavigation, children }: AppShellProps) {
 
           <nav className="app-navigation" aria-label="ناوبری اصلی">
             <Link
+              aria-current={activeNavigation === "dashboard" ? "page" : undefined}
               className={`app-navigation-link ${activeNavigation === "dashboard" ? "active" : ""}`}
               href="/"
             >
               {fa.navigation.dashboard}
             </Link>
             <Link
+              aria-current={activeNavigation === "seasons" ? "page" : undefined}
               className={`app-navigation-link ${activeNavigation === "seasons" ? "active" : ""}`}
               href="/seasons"
             >
               {fa.navigation.seasons}
             </Link>
             <Link
+              aria-current={activeNavigation === "practices" ? "page" : undefined}
               className={`app-navigation-link ${activeNavigation === "practices" ? "active" : ""}`}
               href="/work-practices"
             >
@@ -56,7 +59,7 @@ export function AppShell({ user, activeNavigation, children }: AppShellProps) {
           </div>
         </div>
       </header>
-      <main className="container py-4 py-lg-5">{children}</main>
+      <main className="container py-4 py-lg-5" id="main-content" tabIndex={-1}>{children}</main>
     </div>
   );
 }

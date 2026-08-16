@@ -15,7 +15,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="auth-page">
+    <main className="auth-page" id="main-content" tabIndex={-1}>
       <div className="container auth-container">
         <div className="row g-0 auth-shell overflow-hidden">
           <section className="col-lg-6 auth-story d-none d-lg-flex" aria-label="معرفی هم‌مسیر">
@@ -24,9 +24,9 @@ export default async function LoginPage() {
                 هـ
               </div>
               <p className="auth-kicker mb-3">{fa.app.name}</p>
-              <h1 className="display-6 fw-semibold mb-4">
+              <h2 className="display-6 fw-semibold mb-4">
                 عملکردی که می‌شود آن را دید، توضیح داد و بهبود بخشید.
-              </h1>
+              </h2>
               <p className="auth-story-copy mb-0">
                 از توافق ابتدای دوره تا تسک و مستند نهایی؛ همه‌چیز در یک مسیر روشن و قابل ردیابی.
               </p>
@@ -44,7 +44,7 @@ export default async function LoginPage() {
                 <span className="fw-bold">{fa.app.name}</span>
               </div>
               <p className="text-primary fw-semibold small mb-2">{fa.app.description}</p>
-              <h2 className="h2 fw-bold mb-2">{fa.auth.heading}</h2>
+              <h1 className="h2 fw-bold mb-2">{fa.auth.heading}</h1>
               <p className="text-secondary mb-4">{fa.auth.intro}</p>
               <LoginForm />
               <div className="auth-security mt-4 pt-4 border-top">

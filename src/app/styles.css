@@ -18,8 +18,28 @@ body {
 }
 
 :focus-visible {
-  outline: 3px solid #33a99b;
-  outline-offset: 2px;
+  outline: 3px solid #0d6d63;
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 2000;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  padding: 0.7rem 1rem;
+  border-radius: 0.65rem;
+  color: #fff;
+  background: var(--brand-950);
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-180%);
+  transition: transform 140ms ease;
+}
+
+.skip-link:focus-visible {
+  outline-color: #fff;
+  transform: translateY(0);
 }
 
 .btn-primary {
