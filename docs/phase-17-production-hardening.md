@@ -9,6 +9,7 @@
 - HSTS و `upgrade-insecure-requests` فقط در Production فعال می‌شوند تا توسعه محلی HTTP مختل نشود.
 - هدر شناسایی framework غیرفعال است.
 - `/api/health` یک liveness endpoint بدون cache و بدون افشای secret یا وضعیت داده‌های کسب‌وکار فراهم می‌کند.
+- `/api/ready` وجود تنظیمات احراز هویت و اتصال واقعی دیتابیس را بدون افشای secret یا داده‌های کسب‌وکار کنترل می‌کند و در صورت آماده نبودن پاسخ 503 می‌دهد.
 - CI روی Node 24 و pnpm قفل‌شده، generate/validate Prisma، typecheck، lint، test و build را اجرا می‌کند.
 
 ## تنظیمات محیط
@@ -33,7 +34,7 @@ Pool max باید در تعداد instanceهای هم‌زمان ضرب شود �
 2. `pnpm install --frozen-lockfile` و `pnpm db:generate` را اجرا کنید.
 3. قبل از انتشار کد، `pnpm db:deploy` را به‌عنوان job یک‌باره اجرا کنید.
 4. `pnpm verify` را عبور دهید و artifact خروجی را deploy کنید.
-5. پاسخ 200 از `/api/health` و redirect مسیرهای محافظت‌شده به `/login` را کنترل کنید.
+5. پاسخ 200 از `/api/health` و `/api/ready` و redirect مسیرهای محافظت‌شده به `/login` را کنترل کنید.
 6. Login، ایجاد Task و خواندن گزارش را با یک حساب تست Production smoke-test کنید.
 7. Advisorهای Security و Performance Supabase و logهای خطای application/database را بررسی کنید.
 
