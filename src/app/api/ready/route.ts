@@ -10,20 +10,9 @@ const responseHeaders = {
 export async function GET() {
   try {
     getAuthSecret();
-    await getPrisma().$queryRaw`SELECT 1`;
-
-    return Response.json(
-      {
-        status: "ready",
-        dependencies: {
-          authentication: "ok",
-          database: "ok",
-        },
-      },
-      { headers: responseHeaders },
-    );
   } catch (error) {
     console.error("Production readiness check failed.", {
+      dependency: "authentication",
       errorType: error instanceof Error ? error.name : "UnknownError",
     });
 
@@ -35,4 +24,32 @@ export async function GET() {
       },
     );
   }
+
+  try {
+    await getPrisma().$queryRaw`SELECT 1`;
+  } catch (error) {
+    console.error("Production readiness check failed.", {
+      dependency: "database",
+      errorType: error instanceof Error ? error.name : "UnknownError",
+    });
+
+    return Response.json(
+      { status: "not_ready" },
+      {
+        status: 503,
+        headers: responseHeaders,
+      },
+    );
+  }
+
+  return Response.json(
+    {
+      status: "ready",
+      dependencies: {
+        authentication: "ok",
+        database: "ok",
+      },
+    },
+    { headers: responseHeaders },
+  );
 }
