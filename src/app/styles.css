@@ -14,7 +14,7 @@ body {
   min-height: 100vh;
   background: var(--surface-muted);
   color: #18302f;
-  font-family: Tahoma, Arial, sans-serif;
+  font-family: var(--font-iran-sans-x), Tahoma, Arial, sans-serif;
 }
 
 :focus-visible {
