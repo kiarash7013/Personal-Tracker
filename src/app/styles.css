@@ -1,24 +1,25 @@
 :root {
   color-scheme: light;
-  --brand-950: #102a2a;
-  --brand-900: #153b3a;
-  --brand-700: #176b63;
-  --brand-600: #167f73;
-  --brand-100: #dff4ef;
-  --surface-muted: #f3f6f5;
-  --bs-primary: #167f73;
-  --bs-primary-rgb: 22, 127, 115;
+  --brand-950: #27103f;
+  --brand-900: #3b185f;
+  --brand-800: #54258a;
+  --brand-700: #6431a7;
+  --brand-600: #7b3ac6;
+  --brand-100: #f1e9fb;
+  --surface-muted: #f7f4fa;
+  --bs-primary: #7b3ac6;
+  --bs-primary-rgb: 123, 58, 198;
 }
 
 body {
   min-height: 100vh;
   background: var(--surface-muted);
-  color: #18302f;
+  color: #28193a;
   font-family: var(--font-iran-sans-x), Tahoma, Arial, sans-serif;
 }
 
 :focus-visible {
-  outline: 3px solid #0d6d63;
+  outline: 3px solid #6d32b5;
   outline-offset: 3px;
 }
 
@@ -57,8 +58,8 @@ body {
   align-items: center;
   padding: 2rem 0;
   background:
-    radial-gradient(circle at 12% 12%, rgba(45, 167, 150, 0.12), transparent 30rem),
-    #eef3f1;
+    radial-gradient(circle at 12% 12%, rgba(123, 58, 198, 0.14), transparent 30rem),
+    #f7f4fa;
 }
 
 .auth-container {
@@ -102,7 +103,7 @@ body {
 }
 
 .auth-kicker {
-  color: #9fe2d8;
+  color: #dec7fa;
   font-weight: 700;
   letter-spacing: 0.08em;
 }
@@ -138,7 +139,7 @@ body {
   place-items: center;
   border-radius: 1rem;
   color: var(--brand-900);
-  background: #9fe2d8;
+  background: #dec7fa;
   font-size: 1.35rem;
   font-weight: 800;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
@@ -170,8 +171,8 @@ body {
 }
 
 .auth-input:focus {
-  border-color: #45a99d;
-  box-shadow: 0 0 0 0.25rem rgba(22, 127, 115, 0.12);
+  border-color: #a467de;
+  box-shadow: 0 0 0 0.25rem rgba(123, 58, 198, 0.12);
 }
 
 .auth-submit {
@@ -185,7 +186,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
-  color: #667b78;
+  color: #746784;
   font-size: 0.78rem;
 }
 
@@ -194,8 +195,8 @@ body {
   height: 0.55rem;
   border: 2px solid #fff;
   border-radius: 50%;
-  background: #2aaa7d;
-  box-shadow: 0 0 0 2px #bdebd8;
+  background: #8450cf;
+  box-shadow: 0 0 0 2px #eadcf9;
 }
 
 .app-page {
@@ -223,7 +224,7 @@ body {
 .app-navigation-link {
   padding: 0.5rem 0.8rem;
   border-radius: 0.65rem;
-  color: #526966;
+  color: #6e5b80;
   font-size: 0.85rem;
   font-weight: 700;
   text-decoration: none;
@@ -242,7 +243,7 @@ body {
 
 .dashboard-hero {
   padding: 2.5rem;
-  border: 1px solid #dbe5e2;
+  border: 1px solid #e5ddef;
   border-radius: 1.25rem;
   background: #fff;
 }
@@ -260,7 +261,7 @@ body {
 .metric-label {
   display: block;
   margin-bottom: 0.65rem;
-  color: #667b78;
+  color: #746784;
   font-size: 0.82rem;
   font-weight: 700;
 }
@@ -352,12 +353,12 @@ body {
 }
 
 .role-chip {
-  color: #365f73;
-  background: #e6f2f8;
+  color: #7253a0;
+  background: #efe7fa;
 }
 
 .season-counts {
-  color: #5e7571;
+  color: #756a84;
   font-size: 0.8rem;
 }
 
@@ -368,7 +369,7 @@ body {
   margin-inline-end: 0.35rem;
   border-radius: 50%;
   content: "";
-  background: #80aaa4;
+  background: #a88bc7;
 }
 
 .season-members > div {
@@ -376,7 +377,7 @@ body {
   grid-template-columns: minmax(7rem, 0.35fr) 1fr;
   gap: 1rem;
   padding: 1rem 0;
-  border-bottom: 1px solid #edf1f0;
+  border-bottom: 1px solid #eee8f4;
 }
 
 .season-members > div:first-child {
@@ -389,7 +390,7 @@ body {
 }
 
 .season-members dt {
-  color: #6d817e;
+  color: #756a84;
   font-size: 0.82rem;
 }
 
@@ -401,7 +402,7 @@ body {
 .season-members small {
   display: block;
   margin-top: 0.25rem;
-  color: #7b8d8a;
+  color: #8a7e99;
   font-size: 0.72rem;
   font-weight: 400;
 }
@@ -495,10 +496,10 @@ body {
 .practice-chip {
   display: inline-flex;
   padding: 0.38rem 0.7rem;
-  border: 1px solid #d5e3e0;
+  border: 1px solid #e2d9ed;
   border-radius: 999px;
-  color: #365f58;
-  background: #f5faf9;
+  color: #654c82;
+  background: #faf7fd;
   font-size: 0.78rem;
   font-weight: 700;
 }
@@ -508,9 +509,9 @@ body {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
   padding: 1rem;
-  border: 1px solid #d8e2e0;
+  border: 1px solid #e3daed;
   border-radius: 0.9rem;
-  background: #fbfdfc;
+  background: #fcfaff;
 }
 
 .practice-picker-invalid {
@@ -523,14 +524,14 @@ body {
   gap: 0.7rem;
   min-height: 4rem;
   padding: 0.85rem;
-  border: 1px solid #e1e9e7;
+  border: 1px solid #ebe4f2;
   border-radius: 0.75rem;
   cursor: pointer;
   background: #fff;
 }
 
 .practice-option:hover {
-  border-color: #9dc7c0;
+  border-color: #c6a8e4;
 }
 
 .practice-option strong,
@@ -540,7 +541,7 @@ body {
 
 .practice-option small {
   margin-top: 0.2rem;
-  color: #748784;
+  color: #82748f;
 }
 
 .practice-inactive {
@@ -623,9 +624,9 @@ body {
   align-items: center;
   gap: 1rem;
   padding: 0.9rem;
-  border: 1px solid #e0e9e7;
+  border: 1px solid #e9e1f0;
   border-radius: 0.8rem;
-  background: #fbfdfc;
+  background: #fcfaff;
 }
 
 .task-practice-row strong,
@@ -635,7 +636,7 @@ body {
 
 .task-practice-row small {
   margin-top: 0.2rem;
-  color: #748784;
+  color: #82748f;
 }
 
 .evidence-row {
@@ -651,7 +652,7 @@ body {
   gap: 1rem;
   padding: 0.85rem 1rem;
   border-radius: 0.75rem;
-  background: #f7faf9;
+  background: #faf7fd;
 }
 
 .practice-status-done {
@@ -675,15 +676,15 @@ body {
   gap: 0.45rem 0.75rem;
   height: 100%;
   padding: 1rem;
-  border: 1px solid #dce7e4;
+  border: 1px solid #e6def0;
   border-radius: 0.8rem;
   color: inherit;
   text-decoration: none;
 }
 
 .evidence-link:hover {
-  border-color: #8ebdb5;
-  background: #f8fcfb;
+  border-color: #b995dc;
+  background: #fbf8fe;
 }
 
 .evidence-link small {
@@ -704,11 +705,11 @@ body {
   justify-content: space-between;
   gap: 2rem;
   color: #fff;
-  background: linear-gradient(130deg, #133e3a 0%, #1c655e 68%, #238378 100%);
+  background: linear-gradient(130deg, #371658 0%, #6431a7 68%, #9154d8 100%);
 }
 
 .employee-dashboard-hero .eyebrow {
-  color: #aee0d9;
+  color: #e2d0fa;
 }
 
 .dashboard-hero-actions {
@@ -755,7 +756,7 @@ body {
 }
 
 .metric-fraction {
-  color: #607773;
+  color: #756a84;
   font-size: 0.75rem;
   font-weight: 700;
 }
@@ -773,7 +774,7 @@ body {
   border-radius: 0.8rem;
   color: inherit;
   text-decoration: none;
-  background: #f3f8f7;
+  background: #f8f4fc;
 }
 
 .action-summary-grid strong {
@@ -782,7 +783,7 @@ body {
 }
 
 .action-summary-grid span {
-  color: #657a76;
+  color: #7b6c89;
   font-size: 0.75rem;
 }
 
@@ -811,7 +812,7 @@ body {
 
 .compact-task-link small,
 .recent-task-row small {
-  color: #72837f;
+  color: #81738e;
   font-size: 0.72rem;
 }
 
@@ -846,7 +847,7 @@ body {
 
 .calculation-box span,
 .calculation-box small {
-  color: #6d817d;
+  color: #7b6c89;
   font-size: 0.72rem;
 }
 
@@ -858,7 +859,7 @@ body {
 
 .manager-dashboard-heading {
   padding: 1.5rem;
-  border: 1px solid #dce7e4;
+  border: 1px solid #e6def0;
   border-radius: 1rem;
   background: #fff;
 }
@@ -871,8 +872,8 @@ body {
   padding: 0.9rem 1rem;
   border-inline-start: 0.25rem solid #7eb4ac;
   border-radius: 0.4rem;
-  color: #415d58;
-  background: #f4f9f8;
+  color: #5e4c70;
+  background: #f9f5fd;
   line-height: 1.8;
 }
 
@@ -900,7 +901,7 @@ body {
 
 .supporting-reasons p {
   margin: 0;
-  color: #6b7d79;
+  color: #7e708b;
   font-size: 0.75rem;
   line-height: 1.7;
 }
@@ -923,7 +924,7 @@ body {
   justify-content: center;
   gap: 1rem;
   margin-top: 0.5rem;
-  color: #596f6a;
+  color: #72647f;
   font-size: 0.75rem;
 }
 
@@ -944,8 +945,8 @@ body {
   margin: 1rem 0 0;
   padding: 0.9rem 1rem;
   border-radius: 0.75rem;
-  color: #405d57;
-  background: #f3f8f7;
+  color: #5e4c70;
+  background: #f8f4fc;
   line-height: 1.8;
 }
 
@@ -962,10 +963,10 @@ body {
   justify-content: space-between;
   gap: 1rem;
   padding: 1rem 1.2rem;
-  border: 1px solid #b9dbd5;
+  border: 1px solid #d5c0ed;
   border-radius: 0.85rem;
-  color: #285c55;
-  background: #edf8f6;
+  color: #573e75;
+  background: #f6f0fc;
 }
 
 .snapshot-banner > div {
@@ -974,12 +975,12 @@ body {
 }
 
 .snapshot-banner span {
-  color: #63817c;
+  color: #7d6b8c;
   font-size: 0.75rem;
 }
 
 .snapshot-banner code {
-  color: #315d57;
+  color: #604879;
   font-size: 0.75rem;
 }
 
@@ -991,12 +992,12 @@ body {
   border-radius: 1rem;
   text-align: center;
   color: #fff;
-  background: linear-gradient(135deg, #173f3a, #247a70);
+  background: linear-gradient(135deg, #3b185f, #7b3ac6);
 }
 
 .report-level-card span,
 .report-level-card small {
-  color: #b9e2dc;
+  color: #e4d3fa;
 }
 
 .report-level-card strong {
@@ -1045,7 +1046,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 999px;
   direction: ltr;
-  color: #b8ece5;
+  color: #e5d5fa;
   background: rgba(255, 255, 255, 0.08);
   font-size: 0.78rem;
   font-weight: 700;
